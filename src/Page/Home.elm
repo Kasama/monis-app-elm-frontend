@@ -7,10 +7,11 @@ import Html exposing (a, aside, button, div, footer, h1, h2, i, li, main_, nav, 
 import Html.Events exposing (onClick)
 import MonisApp.Enum.AccountType as AccountType exposing (AccountType)
 import Objects.Account exposing (Account, accountSelector)
+import Objects.Transaction as Transaction exposing (Transaction)
 import Page
 import RemoteData
 import Route
-import Session exposing (Session)
+import Session exposing (Session, SessionType(..))
 
 
 type alias Model =
@@ -18,6 +19,7 @@ type alias Model =
     , accounts : List Account
     , selectedAccount : Maybe Account
     , errors : List String
+    , transactions : List Transaction
     }
 
 
@@ -26,6 +28,7 @@ type Msg
     | Logout
     | FetchAccounts
     | GotAccounts (Data (List Account))
+    | GotTransactions (Data (List Transaction))
     | SelectAccount Account
 
 
@@ -42,6 +45,7 @@ init session =
             , accounts = []
             , selectedAccount = Nothing
             , errors = []
+            , transactions = []
             }
     in
     ( model, fetchAccounts model )
@@ -77,8 +81,35 @@ update msg model =
                 _ ->
                     ( model, Cmd.none )
 
+        GotTransactions remoteTransactions ->
+            case remoteTransactions of
+                RemoteData.Success transactions ->
+                    ( { model | transactions = transactions }, Cmd.none )
+
+                RemoteData.Failure err ->
+                    ( { model | errors = getErrorMessages err }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
+
         SelectAccount account ->
-            ( { model | selectedAccount = Just account }, Cmd.none )
+            ( { model | selectedAccount = Just account }, fetchTransactions model )
+
+
+fetchTransactions : Model -> Cmd Msg
+fetchTransactions model =
+    case ( .kind <| sessionOf model, model.selectedAccount ) of
+        ( LoggedIn user, Just acc ) ->
+            Backend.Graphql.makeQueryRequest (Just user.token)
+                (Transaction.transactionQuery
+                    { accountId = Just acc.id
+                    , categoryId = Nothing
+                    }
+                )
+                GotTransactions
+
+        ( _, _ ) ->
+            Cmd.none
 
 
 fetchAccounts : Model -> Cmd Msg
@@ -119,88 +150,94 @@ view model =
         }
     , footer = footer [] []
     , content =
-        div
-            [ Css.tw "flex flex-row h-full w-full"
-            ]
-            [ aside [ Css.tw "flex flex-col h-full w-1/5 bg-complement" ]
-                (List.concat
-                    (let
-                        isDebit account =
-                            case account.type_ of
-                                AccountType.Debit ->
-                                    True
+        case model.session.kind of
+            Session.Guest ->
+                div [ Css.tw "flex flex-col w-1/5" ]
+                    [ p [] [ text ("Model: " ++ Debug.toString model) ]
+                    , a [ Css.btn "blue", Route.href Route.Login ]
+                        [ text "Login now!" ]
+                    ]
 
-                                AccountType.Credit ->
-                                    False
+            Session.LoggedIn user ->
+                div
+                    [ Css.tw "flex flex-row h-full w-full"
+                    ]
+                    [ aside [ Css.tw "flex flex-col h-full w-1/5 bg-complement" ]
+                        (List.concat
+                            (let
+                                isSelected account =
+                                    case model.selectedAccount of
+                                        Just a ->
+                                            a.id == account.id
 
-                        isSelected account =
-                            case model.selectedAccount of
-                                Just a ->
-                                    a.id == account.id
+                                        Nothing ->
+                                            False
 
-                                Nothing ->
-                                    False
+                                ( debitAccounts, creditAccounts ) =
+                                    List.partition
+                                        (\account ->
+                                            case account.type_ of
+                                                AccountType.Debit ->
+                                                    True
 
-                        ( debitAccounts, creditAccounts ) =
-                            List.partition isDebit model.accounts
-                     in
-                     [ ( "Debit Accounts:", debitAccounts ), ( "Credit Accounts:", creditAccounts ) ]
-                        |> List.map
-                            (\( title, accounts ) ->
-                                [ h2 [ Css.tw "text-lg py-3 px-5" ] [ text title ]
-                                , ul [ Css.tw "md-shadow" ] <|
-                                    List.map
-                                        (\acc ->
-                                            li
-                                                [ Css.tw "p-5"
-                                                , Css.tw
-                                                    (if isSelected acc then
-                                                        "bg-highlight"
-
-                                                     else
-                                                        "hover:bg-accent cursor-pointer"
-                                                    )
-                                                , Html.Events.onClick (SelectAccount acc)
-                                                ]
-                                                [ icon <| Maybe.withDefault "piggy-bank" acc.icon
-                                                , span [ Css.tw "ml-2 text-md" ] [ text acc.name ]
-                                                ]
+                                                AccountType.Credit ->
+                                                    False
                                         )
-                                        accounts
-                                ]
-                            )
-                    )
-                )
-            , main_
-                [ Css.tw "flex flex-col justify-center items-center"
-                , Css.tw "w-full flex-grow"
-                ]
-                [ nav [] []
-                , div [ Css.tw "flex flex-col w-1/5" ]
-                    (case model.session.kind of
-                        Session.Guest ->
-                            [ p [] [ text ("Model: " ++ Debug.toString model) ]
-                            , a [ Css.btn "blue", Route.href Route.Login ]
-                                [ text "Login now!" ]
-                            ]
+                                        model.accounts
+                             in
+                             [ ( "Debit Accounts:", debitAccounts ), ( "Credit Accounts:", creditAccounts ) ]
+                                |> List.map
+                                    (\( title, accounts ) ->
+                                        if List.isEmpty accounts then
+                                            []
 
-                        Session.LoggedIn user ->
-                            [ p [] [ text ("Hello " ++ user.name) ]
-                            , button [ Css.btn "pink", onClick Logout ]
-                                [ text "Logout" ]
-                            , ul []
-                                (List.map
-                                    (\a ->
-                                        li []
-                                            [ text a.name
+                                        else
+                                            [ h2 [ Css.tw "text-lg py-3 px-5" ] [ text title ]
+                                            , ul [ Css.tw "md-shadow" ] <|
+                                                List.map
+                                                    (\acc ->
+                                                        li
+                                                            [ Css.tw "p-5"
+                                                            , Css.tw
+                                                                (if isSelected acc then
+                                                                    "bg-highlight"
+
+                                                                 else
+                                                                    "hover:bg-accent cursor-pointer"
+                                                                )
+                                                            , Html.Events.onClick (SelectAccount acc)
+                                                            ]
+                                                            [ icon <| Maybe.withDefault "piggy-bank" acc.icon
+                                                            , span [ Css.tw "ml-2 text-md" ] [ text acc.name ]
+                                                            ]
+                                                    )
+                                                    accounts
                                             ]
                                     )
-                                    model.accounts
-                                )
-                            ]
-                    )
-                ]
-            ]
+                            )
+                        )
+                    , main_
+                        [ Css.tw "flex flex-col justify-center items-center"
+                        , Css.tw "w-full flex-grow"
+                        ]
+                        [ nav [] []
+                        , div [ Css.tw "flex flex-col w-3/5" ]
+                            (case model.selectedAccount of
+                                Nothing ->
+                                    [ p [] [ text "No account selected." ]
+                                    , p [] [ text "Select one on the left panel." ]
+                                    ]
+
+                                Just account ->
+                                    [ p [] [ text <| "Using account: " ++ account.name ]
+                                    , ul []
+                                        (List.map (\t -> li [] [ text <| Maybe.withDefault "no comment" t.comment ])
+                                            model.transactions
+                                        )
+                                    ]
+                            )
+                        ]
+                    ]
     }
 
 

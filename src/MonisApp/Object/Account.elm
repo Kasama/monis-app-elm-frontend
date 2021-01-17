@@ -52,6 +52,13 @@ name =
     Object.selectionForField "String" "name" [] Decode.string
 
 
+transactions :
+    SelectionSet decodesTo MonisApp.Object.Transaction
+    -> SelectionSet (List decodesTo) MonisApp.Object.Account
+transactions object_ =
+    Object.selectionForCompositeField "transactions" [] object_ (identity >> Decode.list)
+
+
 type_ : SelectionSet MonisApp.Enum.AccountType.AccountType MonisApp.Object.Account
 type_ =
     Object.selectionForField "Enum.AccountType.AccountType" "type" [] MonisApp.Enum.AccountType.decoder
