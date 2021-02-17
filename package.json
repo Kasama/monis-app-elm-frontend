@@ -20,7 +20,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "concurrently -k -n w: npm:watch:*",
-    "watch:elm": "elm-live src/Main.elm -H -d=./dist --start-page=index.html --pushstate -- --output=dist/app.js",
+    "watch:elm": "elm-live src/Main.elm -H -d=./dist --start-page=index.html --pushstate -- --output=dist/app.js --debug",
     "watch:tailwind": "chokidar tailwind.config.js main.css postcss.config.js --initial -c 'yarn gen:tailwind'",
     "watch:typescript": "chokidar ./**.ts --initial -c 'yarn gen:typescript'",
     "gen:graphql": "elm-graphql http://127.0.0.1:4000/graphiql --base MonisApp --output src",

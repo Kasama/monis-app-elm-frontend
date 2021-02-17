@@ -2,6 +2,7 @@ module Page.Home exposing (Model, Msg(..), init, sessionOf, subscriptions, updat
 
 import Backend.Graphql exposing (Data, getErrorMessages)
 import Components.Icon exposing (icon)
+import Components.Loader as Loader
 import Css
 import Html exposing (a, aside, div, footer, h2, li, main_, nav, p, span, text, ul)
 import Html.Events exposing (onClick)
@@ -49,6 +50,7 @@ type Msg
     | GotAccounts (Data (List Account))
     | GotTransactions (Data (List Transaction))
     | SelectAccount Account
+    | ClearError String
 
 
 sessionOf : Model -> Session
@@ -79,9 +81,6 @@ update msg model =
     let
         session =
             sessionOf model
-
-        debugUpdate =
-            Debug.log ("Got update. Msg: " ++ Debug.toString msg ++ " -- Model: " ++ Debug.toString model) 1
     in
     case ( msg, model.state ) of
         ( Noop, _ ) ->
@@ -89,6 +88,9 @@ update msg model =
 
         ( Logout, _ ) ->
             ( { model | session = { session | kind = Session.Guest }, state = Guest }, Session.cleanSession )
+
+        ( ClearError err, _ ) ->
+            ( { model | errors = List.filter ((/=) err) model.errors }, Cmd.none )
 
         ( FetchAccounts, NotGuest _ NoAccounts ) ->
             ( model, fetchAccounts model )
@@ -180,108 +182,125 @@ view model =
         }
     , footer = footer [] []
     , content =
-        case model.state of
-            Guest ->
-                div [ Css.tw "flex flex-col w-1/5" ]
-                    [ p [] [ text ("Model: " ++ Debug.toString model) ]
-                    , a [ Css.btn "blue", Route.href Route.Login ]
-                        [ text "Login now!" ]
-                    ]
+        div [ Css.tw "flex flex-col w-full h-full" ]
+            [ div
+                [ Css.tw "flex-col bg-rose-800 p-2 my-10"
+                , if List.isEmpty model.errors then
+                    Css.tw "hidden"
 
-            NotGuest _ withUserState ->
-                div
-                    [ Css.tw "flex flex-row h-full w-full"
-                    ]
-                    [ aside [ Css.tw "flex flex-col h-full w-1/5 bg-complement" ]
-                        (case withUserState of
-                            WithAccounts accounts withAccountsState ->
-                                List.concat
-                                    (let
-                                        isSelected account =
-                                            case withAccountsState of
-                                                WithSelectedAccount a _ ->
-                                                    a.id == account.id
-
-                                                NoSelectedAccount ->
-                                                    False
-
-                                        ( debitAccounts, creditAccounts ) =
-                                            List.partition
-                                                (\account ->
-                                                    case account.type_ of
-                                                        AccountType.Debit ->
-                                                            True
-
-                                                        AccountType.Credit ->
-                                                            False
-                                                )
-                                                accounts
-                                     in
-                                     [ ( "Debit Accounts:", debitAccounts ), ( "Credit Accounts:", creditAccounts ) ]
-                                        |> List.map
-                                            (\( title, partialAccounts ) ->
-                                                if List.isEmpty partialAccounts then
-                                                    []
-
-                                                else
-                                                    [ h2 [ Css.tw "text-lg py-3 px-5" ] [ text title ]
-                                                    , ul [ Css.tw "md-shadow" ] <|
-                                                        List.map
-                                                            (\acc ->
-                                                                li
-                                                                    [ Css.tw "p-5"
-                                                                    , Css.tw
-                                                                        (if isSelected acc then
-                                                                            "bg-highlight"
-
-                                                                         else
-                                                                            "hover:bg-accent cursor-pointer"
-                                                                        )
-                                                                    , Html.Events.onClick (SelectAccount acc)
-                                                                    ]
-                                                                    [ icon <| Maybe.withDefault "piggy-bank" acc.icon
-                                                                    , span [ Css.tw "ml-2 text-md" ] [ text acc.name ]
-                                                                    ]
-                                                            )
-                                                            partialAccounts
-                                                    ]
-                                            )
-                                    )
-
-                            _ ->
-                                []
-                        )
-                    , main_
-                        [ Css.tw "flex flex-col justify-center items-center"
-                        , Css.tw "w-full flex-grow"
+                  else
+                    Css.tw "flex"
+                ]
+              <|
+                List.map
+                    (\err ->
+                        div [ Css.tw "flex flex-row w-full justify-between" ]
+                            [ span [] [ text err ]
+                            , span [ Html.Events.onClick (ClearError err) ] [ text "x" ]
+                            ]
+                    )
+                    model.errors
+            , case model.state of
+                Guest ->
+                    div [ Css.tw "flex flex-col w-1/5" ]
+                        [ a [ Css.btn "blue", Route.href Route.Login ]
+                            [ text "Login now!" ]
                         ]
-                        [ nav [] []
-                        , div [ Css.tw "flex flex-col w-3/5" ]
+
+                NotGuest _ withUserState ->
+                    div
+                        [ Css.tw "flex flex-row h-full w-full"
+                        ]
+                        [ aside [ Css.tw "flex flex-col h-full w-1/5 bg-complement" ]
                             (case withUserState of
-                                WithAccounts _ (WithSelectedAccount account withTransactionsState) ->
-                                    [ p [] [ text <| "Using account: " ++ account.name ]
-                                    , ul []
-                                        (List.map (\t -> li [] [ text <| Maybe.withDefault "no comment" t.comment ])
-                                            (case withTransactionsState of
-                                                WithTransactions transactions ->
-                                                    transactions
+                                WithAccounts accounts withAccountsState ->
+                                    List.concat
+                                        (let
+                                            isSelected account =
+                                                case withAccountsState of
+                                                    WithSelectedAccount a _ ->
+                                                        a.id == account.id
 
-                                                _ ->
-                                                    []
-                                            )
+                                                    NoSelectedAccount ->
+                                                        False
+
+                                            ( debitAccounts, creditAccounts ) =
+                                                List.partition
+                                                    (\account ->
+                                                        case account.type_ of
+                                                            AccountType.Debit ->
+                                                                True
+
+                                                            AccountType.Credit ->
+                                                                False
+                                                    )
+                                                    accounts
+                                         in
+                                         [ ( "Debit Accounts:", debitAccounts ), ( "Credit Accounts:", creditAccounts ) ]
+                                            |> List.map
+                                                (\( title, partialAccounts ) ->
+                                                    if List.isEmpty partialAccounts then
+                                                        []
+
+                                                    else
+                                                        [ h2 [ Css.tw "text-lg py-3 px-5" ] [ text title ]
+                                                        , ul [ Css.tw "md-shadow" ] <|
+                                                            List.map
+                                                                (\acc ->
+                                                                    li
+                                                                        [ Css.tw "p-5"
+                                                                        , Css.tw
+                                                                            (if isSelected acc then
+                                                                                "bg-brightshade-600"
+
+                                                                             else
+                                                                                "hover:bg-accentshade-700 cursor-pointer"
+                                                                            )
+                                                                        , Html.Events.onClick (SelectAccount acc)
+                                                                        ]
+                                                                        [ icon <| Maybe.withDefault "piggy-bank" acc.icon
+                                                                        , span [ Css.tw "ml-2 text-md" ] [ text acc.name ]
+                                                                        ]
+                                                                )
+                                                                partialAccounts
+                                                        ]
+                                                )
                                         )
-                                    ]
-
-                                WithAccounts _ _ ->
-                                    [ p [] [ text "No account selected." ]
-                                    , p [] [ text "Select one on the left panel." ]
-                                    ]
 
                                 _ ->
                                     []
                             )
+                        , main_
+                            [ Css.tw "flex flex-col justify-center items-center"
+                            , Css.tw "w-full flex-grow"
+                            ]
+                            [ nav [] []
+                            , div [ Css.tw "flex flex-col w-3/5" ]
+                                (case withUserState of
+                                    WithAccounts _ (WithSelectedAccount account withTransactionsState) ->
+                                        [ p [] [ text <| "Using account: " ++ account.name ]
+                                        , ul []
+                                            (case withTransactionsState of
+                                                WithTransactions transactions ->
+                                                    List.map (\t -> li [] [ text <| Maybe.withDefault "no comment" t.comment ])
+                                                        transactions
+
+                                                _ ->
+                                                    [ Loader.rings [] [] ]
+                                            )
+                                        ]
+
+                                    WithAccounts _ _ ->
+                                        [ p [] [ text "No account selected." ]
+                                        , p [] [ text "Select one on the left panel." ]
+                                        ]
+
+                                    _ ->
+                                        []
+                                )
+                            ]
                         ]
-                    ]
+            ]
     }
 
 

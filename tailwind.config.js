@@ -4,15 +4,15 @@ module.exports = {
   theme: {
     colors: {
       primary: colors.warmGray[800],
-      'primary-shade': colors.warmGray,
+      'primaryshade': colors.warmGray,
       complement: colors.blueGray[700],
-      'complement-shade': colors.blueGray,
+      'complementshade': colors.blueGray,
       accent: colors.orange[400],
-      'accent-shade': colors.orange,
+      'accentshade': colors.orange,
       bright: colors.gray[200],
-      'bright-shade': colors.gray,
+      'brightshade': colors.gray,
       highlight: colors.fuchsia[600],
-      'highlight-shade': colors.fuchsia,
+      'highlightshade': colors.fuchsia,
       ...colors
     },
     extend: {
