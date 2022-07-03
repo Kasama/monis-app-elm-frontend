@@ -1,36 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="dist/main.css">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.0/css/all.css" crossorigin="anonymous">
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="dist/main.css" />
+
+  <meta name="author" content="Kasama" />
+  <meta name="description" content="Monis App" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta httpEquiv="x-ua-compatible" content="ie=edge" />
+  <link rel="canonical" href="/" />
+  <link rel="icon" href="dist/android-chrome-192x192.png" />
+  <link rel="apple-touch-icon" href="dist/apple-touch-icon.png">
+  </link>
+
+  <!-- PWA -->
+  <meta name="theme-color" content="#0e557b" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link href="dist/site.webmanifest" rel="manifest">
+  </link>
+
+  <!-- iOS stuff -->
+  <meta name="apple-mobile-web-app-title" , content="MonisApp" />
+  <meta name="apple-mobile-web-app-status-bar-style" , content="black" />
+  <meta name="apple-mobile-web-app-capable" , content="yes" />
+
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.0/css/all.css" crossorigin="anonymous" />
 
   <title>MonisApp</title>
 </head>
+
 <body>
-  <div id="application">
-    Please enable javascript for this page to work
-  </div>
+  <div id="application">Please enable javascript for this page to work</div>
 
-  <script src="dist/app.js">/* elm application */</script>
-  <script>
-
-    let previousSession = localStorage.getItem('session')
-    previousSession = previousSession ? JSON.parse(previousSession) : null
-
-    let app = Elm.Main.init({
-      node: document.getElementById('application'),
-      flags: previousSession
-    })
-
-    app.ports.localStorageSet.subscribe(function([key, value]) {
-        localStorage.setItem(key, value)
-    })
-
-    app.ports.localStorageGet.subscribe(function(key) {
-        let value = localStorage.getItem(key)
-        app.ports.localStorageReceiver.send(value)
-    })
+  <script src="./main.js">
+    /* elm application */
   </script>
 </body>
+
 </html>

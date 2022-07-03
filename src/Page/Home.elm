@@ -5,7 +5,7 @@ import Components.Icon exposing (icon)
 import Components.Loader as Loader
 import Css
 import Html exposing (a, aside, div, footer, h2, li, main_, nav, p, span, text, ul)
-import Html.Events exposing (onClick)
+import Html.Events
 import MonisApp.Enum.AccountType as AccountType
 import Objects.Account exposing (Account, accountSelector)
 import Objects.Transaction as Transaction exposing (Transaction)
@@ -168,9 +168,6 @@ view model =
 
                 _ ->
                     false
-
-        debugView =
-            Debug.log ("Got view. Model: " ++ Debug.toString model) 1
     in
     { title = ifLoggedIn model.session.kind (\user -> "Hello " ++ user.name) "Hello"
     , navBar =
@@ -178,7 +175,7 @@ view model =
         , content =
             div
                 [ Css.tw "flex-grow flex flex-col justify-center items-center" ]
-                [ text "Helloo" ]
+                [ text "Helloow" ]
         }
     , footer = footer [] []
     , content =
@@ -204,7 +201,7 @@ view model =
                 Guest ->
                     div [ Css.tw "flex flex-col w-1/5" ]
                         [ a [ Css.btn "blue", Route.href Route.Login ]
-                            [ text "Login now!" ]
+                            [ text "Login nowee!" ]
                         ]
 
                 NotGuest _ withUserState ->

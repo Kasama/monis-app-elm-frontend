@@ -1,4 +1,4 @@
-module Session exposing (Session, SessionType(..), cleanSession, decodeSession, decoder, encodeSession, newSession, saveSession)
+module Session exposing (Session, SessionType(..), StoredSession, cleanSession, decodeSession, decoder, encodeSession, fromStoredSession, newSession, saveSession)
 
 import Browser.Navigation as Nav
 import Json.Decode as Decode exposing (Decoder)
@@ -10,6 +10,11 @@ import Ports
 type alias Session =
     { navKey : Nav.Key
     , kind : SessionType
+    }
+
+
+type alias StoredSession =
+    { user : Maybe User
     }
 
 
@@ -62,6 +67,19 @@ newSession navKey maybeUser =
 
             Just user ->
                 LoggedIn user
+    }
+
+
+fromStoredSession : Nav.Key -> StoredSession -> Session
+fromStoredSession navKey session =
+    { navKey = navKey
+    , kind =
+        case session.user of
+            Just user ->
+                LoggedIn user
+
+            Nothing ->
+                Guest
     }
 
 

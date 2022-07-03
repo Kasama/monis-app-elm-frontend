@@ -1,4 +1,4 @@
-module Objects.User exposing (CredentialHolder, Token, User, decoder, encoder, loginMutation)
+module Objects.User exposing (Token, User, decoder, encoder, loginMutation)
 
 import Graphql.Operation exposing (RootMutation)
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet)
@@ -27,15 +27,29 @@ type alias InternalUser =
     }
 
 
-type alias CredentialHolder a =
-    { a | token : Token }
-
-
 type alias User =
-    CredentialHolder InternalUser
+    { email : String
+    , id : String
+    , isActive : Bool
+    , name : String
+    , token : Token
+    }
 
 
-userBuilder : Token -> String -> Id -> Bool -> String -> User
+
+-- Newer syntax based on record composition. Not supported by elm-typescript-interop
+-- type alias CredentialHolder a =
+--     { a
+--         | token : Token
+--         , id : String
+--     }
+--
+--
+-- type alias User =
+--     CredentialHolder InternalUser
+
+
+userBuilder : Token -> String -> String -> Bool -> String -> User
 userBuilder token email id isActive name =
     { token = token
     , email = email
@@ -50,13 +64,7 @@ encoder u =
     Encode.object
         [ ( "token", Encode.string u.token )
         , ( "email", Encode.string u.email )
-        , ( "id"
-          , Encode.string
-                (case u.id of
-                    Id str ->
-                        str
-                )
-          )
+        , ( "id", Encode.string u.id )
         , ( "isActive", Encode.bool u.isActive )
         , ( "name", Encode.string u.name )
         ]
@@ -67,7 +75,7 @@ decoder =
     Decode.map5 userBuilder
         (Decode.field "token" Decode.string)
         (Decode.field "email" Decode.string)
-        (Decode.map Id (Decode.field "id" Decode.string))
+        (Decode.field "id" Decode.string)
         (Decode.field "isActive" Decode.bool)
         (Decode.field "name" Decode.string)
 
@@ -80,7 +88,10 @@ loginMutation args =
 user : Login -> User
 user (Login token internalUser) =
     { email = internalUser.email
-    , id = internalUser.id
+    , id =
+        case internalUser.id of
+            Id id ->
+                id
     , isActive = internalUser.isActive
     , name = internalUser.name
     , token = token

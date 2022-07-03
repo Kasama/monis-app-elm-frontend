@@ -3,13 +3,11 @@ module Main exposing (Msg(..), main)
 import Browser
 import Browser.Navigation as Nav
 import Html
-import Json.Decode exposing (Value)
-import Json.Encode exposing (Value)
 import Page
 import Page.Home as HomePage
 import Page.Login as LoginPage
 import Route exposing (Route)
-import Session exposing (Session)
+import Session exposing (Session, StoredSession)
 import Url exposing (Url)
 
 
@@ -39,15 +37,10 @@ sessionOf model =
             LoginPage.sessionOf loginModel
 
 
-state : Value -> Url -> Nav.Key -> ( Model, Cmd Msg )
-state userValue url key =
+state : StoredSession -> Url -> Nav.Key -> ( Model, Cmd Msg )
+state userSession url key =
     changeRoute (Route.fromUrl url)
-        (Redirect
-            (Maybe.withDefault
-                (Session.newSession key Nothing)
-                (Result.toMaybe <| Json.Decode.decodeValue (Session.decoder key) userValue)
-            )
-        )
+        (Redirect (Session.fromStoredSession key userSession))
 
 
 wrapWith : (a -> Model) -> (b -> Msg) -> ( a, Cmd b ) -> ( Model, Cmd Msg )
@@ -116,7 +109,7 @@ view : Model -> Browser.Document Msg
 view model =
     case model of
         Redirect _ ->
-            { title = "nothing to see here"
+            { title = "nothing to see here. Redirecting..."
             , body = [ Html.text "" ]
             }
 
@@ -142,7 +135,7 @@ subscriptions model =
             Sub.none
 
 
-main : Program Value Model Msg
+main : Program StoredSession Model Msg
 main =
     Browser.application
         { init = state
