@@ -45,6 +45,7 @@ type WithSelectedAccount
 
 type Msg
     = Noop
+    | Login
     | Logout
     | FetchAccounts
     | GotAccounts (Data (List Account))
@@ -202,6 +203,8 @@ view model =
                     div [ Css.tw "flex flex-col w-1/5" ]
                         [ a [ Css.btn "blue", Route.href Route.Login ]
                             [ text "Login nowee!" ]
+                        , a [ Css.btn "pink", Route.href Route.Login ]
+                            [ text "do Login!" ]
                         ]
 
                 NotGuest _ withUserState ->

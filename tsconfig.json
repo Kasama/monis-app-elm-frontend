@@ -2,9 +2,16 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
-    "lib": ["dom", "es6"],
+    "lib": [
+      "dom",
+      "ES2021"
+    ],
     "strict": true,
     "sourceMap": false
   },
-  "exclude": ["node_modules", "typings", "dist"]
+  "exclude": [
+    "node_modules",
+    "typings",
+    "dist"
+  ]
 }

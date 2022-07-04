@@ -18,7 +18,13 @@ type Msg
     | LoginMsg LoginPage.Msg
 
 
-type Model
+type alias Model =
+    { page : PageModel
+    , url : Url
+    }
+
+
+type PageModel
     = Home HomePage.Model
     | Login LoginPage.Model
     | Redirect Session
@@ -26,7 +32,7 @@ type Model
 
 sessionOf : Model -> Session
 sessionOf model =
-    case model of
+    case model.page of
         Redirect session ->
             session
 
@@ -40,12 +46,14 @@ sessionOf model =
 state : StoredSession -> Url -> Nav.Key -> ( Model, Cmd Msg )
 state userSession url key =
     changeRoute (Route.fromUrl url)
-        (Redirect (Session.fromStoredSession key userSession))
+        { page = Redirect (Session.fromStoredSession key userSession)
+        , url = url
+        }
 
 
-wrapWith : (a -> Model) -> (b -> Msg) -> ( a, Cmd b ) -> ( Model, Cmd Msg )
-wrapWith modelWrapper msgWrapper ( model, cmd ) =
-    ( modelWrapper model, Cmd.map msgWrapper cmd )
+wrapWith : Model -> (a -> PageModel) -> (b -> Msg) -> ( a, Cmd b ) -> ( Model, Cmd Msg )
+wrapWith premodel modelWrapper msgWrapper ( model, cmd ) =
+    ( { premodel | page = modelWrapper model }, Cmd.map msgWrapper cmd )
 
 
 changeRoute : Maybe Route -> Model -> ( Model, Cmd Msg )
@@ -57,20 +65,20 @@ changeRoute maybeRoute model =
     case maybeRoute of
         Nothing ->
             LoginPage.init session
-                |> wrapWith Login LoginMsg
+                |> wrapWith model Login LoginMsg
 
         Just Route.Home ->
             HomePage.init session
-                |> wrapWith Home HomeMsg
+                |> wrapWith model Home HomeMsg
 
         Just Route.Login ->
             LoginPage.init session
-                |> wrapWith Login LoginMsg
+                |> wrapWith model Login LoginMsg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case ( msg, model ) of
+    case ( msg, model.page ) of
         ( ClickedLink request, _ ) ->
             case request of
                 Browser.Internal url ->
@@ -84,11 +92,11 @@ update msg model =
 
         ( LoginMsg loginMsg, Login loginModel ) ->
             LoginPage.update loginMsg loginModel
-                |> wrapWith Login LoginMsg
+                |> wrapWith model Login LoginMsg
 
         ( HomeMsg homeMsg, Home homeModel ) ->
             HomePage.update homeMsg homeModel
-                |> wrapWith Home HomeMsg
+                |> wrapWith model Home HomeMsg
 
         ( _, _ ) ->
             ( model, Cmd.none )
@@ -107,7 +115,7 @@ viewPage page msgWrapper model =
 
 view : Model -> Browser.Document Msg
 view model =
-    case model of
+    case model.page of
         Redirect _ ->
             { title = "nothing to see here. Redirecting..."
             , body = [ Html.text "" ]
@@ -122,7 +130,7 @@ view model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    case model of
+    case model.page of
         Home home ->
             HomePage.subscriptions home
                 |> Sub.map HomeMsg

@@ -46,7 +46,7 @@ fromUrl url =
 
 toString : Route -> String
 toString route =
-    "#" ++ String.join "/" (routePaths route)
+    String.join "/" (routePaths route)
 
 
 routePaths : Route -> List String

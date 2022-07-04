@@ -13,8 +13,18 @@ export type ElmPort<T> = {
   send: (value: T) => void,
 }
 
+export type Flags = {
+  user: Maybe<{
+    email: string;
+    id: string;
+    isActive: boolean;
+    name: string;
+    token: string;
+  }>;
+};
+
 export namespace Main {
-  function init(options: { node?: HTMLElement | null; flags: any }): ElmApp;
+  function init(options: { node?: HTMLElement | null; flags: Flags }): ElmApp;
 }
 
 export as namespace Elm;
