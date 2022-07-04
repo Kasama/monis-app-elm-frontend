@@ -73,9 +73,6 @@ view model =
                     ]
                     []
                 ]
-
-        debugView =
-            Debug.log ("Got view. Model: " ++ Debug.toString model) 1
     in
     { title = "Login"
     , navBar = { logoutMsg = UpdateEmail "", content = nav [] [] }
@@ -144,9 +141,6 @@ update msg model =
     let
         form =
             model.form
-
-        debugUpdate =
-            Debug.log ("Got update. Msg: " ++ Debug.toString msg ++ " -- Model: " ++ Debug.toString model) 1
     in
     case msg of
         GotLogin loginResponse ->

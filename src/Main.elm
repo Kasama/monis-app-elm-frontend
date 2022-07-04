@@ -28,6 +28,7 @@ type PageModel
     = Home HomePage.Model
     | Login LoginPage.Model
     | Redirect Session
+    | NotFound Session
 
 
 sessionOf : Model -> Session
@@ -41,6 +42,9 @@ sessionOf model =
 
         Login loginModel ->
             LoginPage.sessionOf loginModel
+
+        NotFound session ->
+            session
 
 
 state : StoredSession -> Url -> Nav.Key -> ( Model, Cmd Msg )
@@ -63,9 +67,6 @@ changeRoute maybeRoute model =
             sessionOf model
     in
     case maybeRoute of
-        Nothing ->
-            LoginPage.init session
-                |> wrapWith model Login LoginMsg
 
         Just Route.Home ->
             HomePage.init session
@@ -74,6 +75,12 @@ changeRoute maybeRoute model =
         Just Route.Login ->
             LoginPage.init session
                 |> wrapWith model Login LoginMsg
+
+        Just Route.NotFound ->
+            ( { model | page = NotFound session }, Cmd.none )
+
+        Nothing ->
+            ( { model | page = NotFound session }, Cmd.none )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -127,6 +134,11 @@ view model =
         Login login ->
             viewPage Page.Login LoginMsg (LoginPage.view login)
 
+        NotFound _ ->
+            { title = "Page Not Found"
+            , body = [ Html.text "Page Not Found" ]
+            }
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -140,6 +152,9 @@ subscriptions model =
                 |> Sub.map LoginMsg
 
         Redirect _ ->
+            Sub.none
+
+        NotFound _ ->
             Sub.none
 
 

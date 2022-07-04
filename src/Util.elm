@@ -15,5 +15,5 @@ foldl1 f list =
         [] ->
             Nothing
 
-        e :: _ ->
-            Just (List.foldl f e list)
+        e :: rest ->
+            Just (List.foldl f e rest)
