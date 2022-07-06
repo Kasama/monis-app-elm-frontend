@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module MonisApp.Query exposing (..)
+module MonisApp.Subscription exposing (..)
 
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
@@ -44,7 +44,7 @@ type alias AccountsOptionalArguments =
 accounts :
     (AccountsOptionalArguments -> AccountsOptionalArguments)
     -> SelectionSet decodesTo MonisApp.Object.Accounts
-    -> SelectionSet (List decodesTo) RootQuery
+    -> SelectionSet (List decodesTo) RootSubscription
 accounts fillInOptionals____ object____ =
     let
         filledInOptionals____ =
@@ -78,7 +78,7 @@ type alias AccountsAggregateOptionalArguments =
 accounts_aggregate :
     (AccountsAggregateOptionalArguments -> AccountsAggregateOptionalArguments)
     -> SelectionSet decodesTo MonisApp.Object.Accounts_aggregate
-    -> SelectionSet decodesTo RootQuery
+    -> SelectionSet decodesTo RootSubscription
 accounts_aggregate fillInOptionals____ object____ =
     let
         filledInOptionals____ =
@@ -100,7 +100,7 @@ type alias AccountsByPkRequiredArguments =
 accounts_by_pk :
     AccountsByPkRequiredArguments
     -> SelectionSet decodesTo MonisApp.Object.Accounts
-    -> SelectionSet (Maybe decodesTo) RootQuery
+    -> SelectionSet (Maybe decodesTo) RootSubscription
 accounts_by_pk requiredArgs____ object____ =
     Object.selectionForCompositeField "accounts_by_pk" [ Argument.required "id" requiredArgs____.id (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.nullable)
 
@@ -126,7 +126,7 @@ type alias CategoriesOptionalArguments =
 categories :
     (CategoriesOptionalArguments -> CategoriesOptionalArguments)
     -> SelectionSet decodesTo MonisApp.Object.Categories
-    -> SelectionSet (List decodesTo) RootQuery
+    -> SelectionSet (List decodesTo) RootSubscription
 categories fillInOptionals____ object____ =
     let
         filledInOptionals____ =
@@ -160,7 +160,7 @@ type alias CategoriesAggregateOptionalArguments =
 categories_aggregate :
     (CategoriesAggregateOptionalArguments -> CategoriesAggregateOptionalArguments)
     -> SelectionSet decodesTo MonisApp.Object.Categories_aggregate
-    -> SelectionSet decodesTo RootQuery
+    -> SelectionSet decodesTo RootSubscription
 categories_aggregate fillInOptionals____ object____ =
     let
         filledInOptionals____ =
@@ -182,7 +182,7 @@ type alias CategoriesByPkRequiredArguments =
 categories_by_pk :
     CategoriesByPkRequiredArguments
     -> SelectionSet decodesTo MonisApp.Object.Categories
-    -> SelectionSet (Maybe decodesTo) RootQuery
+    -> SelectionSet (Maybe decodesTo) RootSubscription
 categories_by_pk requiredArgs____ object____ =
     Object.selectionForCompositeField "categories_by_pk" [ Argument.required "id" requiredArgs____.id (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.nullable)
 
@@ -208,7 +208,7 @@ type alias TransactionsOptionalArguments =
 transactions :
     (TransactionsOptionalArguments -> TransactionsOptionalArguments)
     -> SelectionSet decodesTo MonisApp.Object.Transactions
-    -> SelectionSet (List decodesTo) RootQuery
+    -> SelectionSet (List decodesTo) RootSubscription
 transactions fillInOptionals____ object____ =
     let
         filledInOptionals____ =
@@ -242,7 +242,7 @@ type alias TransactionsAggregateOptionalArguments =
 transactions_aggregate :
     (TransactionsAggregateOptionalArguments -> TransactionsAggregateOptionalArguments)
     -> SelectionSet decodesTo MonisApp.Object.Transactions_aggregate
-    -> SelectionSet decodesTo RootQuery
+    -> SelectionSet decodesTo RootSubscription
 transactions_aggregate fillInOptionals____ object____ =
     let
         filledInOptionals____ =
@@ -264,7 +264,7 @@ type alias TransactionsByPkRequiredArguments =
 transactions_by_pk :
     TransactionsByPkRequiredArguments
     -> SelectionSet decodesTo MonisApp.Object.Transactions
-    -> SelectionSet (Maybe decodesTo) RootQuery
+    -> SelectionSet (Maybe decodesTo) RootSubscription
 transactions_by_pk requiredArgs____ object____ =
     Object.selectionForCompositeField "transactions_by_pk" [ Argument.required "id" requiredArgs____.id (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.nullable)
 
@@ -290,7 +290,7 @@ type alias UsersOptionalArguments =
 users :
     (UsersOptionalArguments -> UsersOptionalArguments)
     -> SelectionSet decodesTo MonisApp.Object.Users
-    -> SelectionSet (List decodesTo) RootQuery
+    -> SelectionSet (List decodesTo) RootSubscription
 users fillInOptionals____ object____ =
     let
         filledInOptionals____ =
@@ -324,7 +324,7 @@ type alias UsersAggregateOptionalArguments =
 users_aggregate :
     (UsersAggregateOptionalArguments -> UsersAggregateOptionalArguments)
     -> SelectionSet decodesTo MonisApp.Object.Users_aggregate
-    -> SelectionSet decodesTo RootQuery
+    -> SelectionSet decodesTo RootSubscription
 users_aggregate fillInOptionals____ object____ =
     let
         filledInOptionals____ =
@@ -346,6 +346,6 @@ type alias UsersByPkRequiredArguments =
 users_by_pk :
     UsersByPkRequiredArguments
     -> SelectionSet decodesTo MonisApp.Object.Users
-    -> SelectionSet (Maybe decodesTo) RootQuery
+    -> SelectionSet (Maybe decodesTo) RootSubscription
 users_by_pk requiredArgs____ object____ =
     Object.selectionForCompositeField "users_by_pk" [ Argument.required "id" requiredArgs____.id Encode.string ] object____ (Basics.identity >> Decode.nullable)

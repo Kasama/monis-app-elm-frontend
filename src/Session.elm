@@ -1,15 +1,16 @@
-module Session exposing (Session, SessionType(..), StoredSession, cleanSession, decodeSession, decoder, encodeSession, fromStoredSession, newSession, saveSession)
+module Session exposing (Session, SessionType(..), StoredSession, cleanSession, encodeSession, fromStoredSession, saveSession)
 
 import Browser.Navigation as Nav
-import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode exposing (Value)
 import Objects.User as User exposing (User)
 import Ports
+import Url exposing (Url)
 
 
 type alias Session =
     { navKey : Nav.Key
     , kind : SessionType
+    , url : Url
     }
 
 
@@ -31,47 +32,13 @@ encoder session =
         )
 
 
-decoder : Nav.Key -> Decoder Session
-decoder navKey =
-    Decode.map2 Session
-        (Decode.succeed navKey)
-        sessionTypeDecoder
-
-
 type SessionType
     = LoggedIn User
     | Guest
 
 
-sessionTypeDecoder : Decoder SessionType
-sessionTypeDecoder =
-    Decode.field "user" (Decode.maybe User.decoder)
-        |> Decode.map
-            (\mu ->
-                case mu of
-                    Just user ->
-                        LoggedIn user
-
-                    Nothing ->
-                        Guest
-            )
-
-
-newSession : Nav.Key -> Maybe User -> Session
-newSession navKey maybeUser =
-    { navKey = navKey
-    , kind =
-        case maybeUser of
-            Nothing ->
-                Guest
-
-            Just user ->
-                LoggedIn user
-    }
-
-
-fromStoredSession : Nav.Key -> StoredSession -> Session
-fromStoredSession navKey session =
+fromStoredSession : Nav.Key -> StoredSession -> Url -> Session
+fromStoredSession navKey session url =
     { navKey = navKey
     , kind =
         case session.user of
@@ -80,17 +47,13 @@ fromStoredSession navKey session =
 
             Nothing ->
                 Guest
+    , url = url
     }
 
 
 encodeSession : Session -> String
 encodeSession session =
     Encode.encode 0 (encoder session)
-
-
-decodeSession : Nav.Key -> String -> Result Decode.Error Session
-decodeSession navKey sessionStr =
-    Decode.decodeString (decoder navKey) sessionStr
 
 
 sessionLocalStorageKey : String

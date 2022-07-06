@@ -1,14 +1,13 @@
-module Objects.User exposing (Token, User, decoder, encoder, loginMutation)
+module Objects.User exposing (Token, User, decoder, encoder)
 
-import Graphql.Operation exposing (RootMutation)
+import Graphql.Operation exposing (RootMutation, RootQuery)
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode exposing (Value)
-import MonisApp.Mutation as Mutation
-import MonisApp.Object exposing (LoginResult)
-import MonisApp.Object.LoginResult as LoginResult
-import MonisApp.Object.User as UserResult
-import MonisApp.Scalar exposing (Id(..))
+import MonisApp.Object exposing (Users)
+import MonisApp.Object.Users
+import MonisApp.Query as Query
+import MonisApp.Scalar exposing (Uuid(..))
 
 
 type alias Token =
@@ -21,7 +20,7 @@ type Login
 
 type alias InternalUser =
     { email : String
-    , id : Id
+    , id : String
     , isActive : Bool
     , name : String
     }
@@ -34,19 +33,6 @@ type alias User =
     , name : String
     , token : Token
     }
-
-
-
--- Newer syntax based on record composition. Not supported by elm-typescript-interop
--- type alias CredentialHolder a =
---     { a
---         | token : Token
---         , id : String
---     }
---
---
--- type alias User =
---     CredentialHolder InternalUser
 
 
 userBuilder : Token -> String -> String -> Bool -> String -> User
@@ -80,35 +66,25 @@ decoder =
         (Decode.field "name" Decode.string)
 
 
-loginMutation : Mutation.LoginRequiredArguments -> SelectionSet (Maybe User) RootMutation
-loginMutation args =
-    Mutation.login args loginSelector
-
-
 user : Login -> User
 user (Login token internalUser) =
     { email = internalUser.email
-    , id =
-        case internalUser.id of
-            Id id ->
-                id
+    , id = internalUser.id
     , isActive = internalUser.isActive
     , name = internalUser.name
     , token = token
     }
 
 
-loginSelector : SelectionSet User LoginResult
-loginSelector =
-    SelectionSet.map user
-        (SelectionSet.map2 Login
-            LoginResult.token
-            (LoginResult.user
-                (SelectionSet.map4 InternalUser
-                    UserResult.email
-                    UserResult.id
-                    UserResult.isActive
-                    UserResult.name
-                )
-            )
-        )
+userQuery : () -> SelectionSet (List InternalUser) RootQuery
+userQuery args =
+    Query.users identity userSelector
+
+
+userSelector : SelectionSet InternalUser Users
+userSelector =
+    SelectionSet.map4 InternalUser
+        MonisApp.Object.Users.email
+        MonisApp.Object.Users.id
+        MonisApp.Object.Users.active
+        MonisApp.Object.Users.name

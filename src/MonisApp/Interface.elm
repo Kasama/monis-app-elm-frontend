@@ -5,5 +5,6 @@
 module MonisApp.Interface exposing (..)
 
 
-type Node
-    = Node
+placeholder : String
+placeholder =
+    ""

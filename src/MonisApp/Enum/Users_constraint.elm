@@ -2,48 +2,46 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module MonisApp.Enum.AccountType exposing (..)
+module MonisApp.Enum.Users_constraint exposing (..)
 
 import Json.Decode as Decode exposing (Decoder)
 
 
-type AccountType
-    = Credit
-    | Debit
+{-| unique or primary key constraints on table "users"
+
+  - Users\_pkey - unique or primary key constraint on columns "id"
+
+-}
+type Users_constraint
+    = Users_pkey
 
 
-list : List AccountType
+list : List Users_constraint
 list =
-    [ Credit, Debit ]
+    [ Users_pkey ]
 
 
-decoder : Decoder AccountType
+decoder : Decoder Users_constraint
 decoder =
     Decode.string
         |> Decode.andThen
             (\string ->
                 case string of
-                    "CREDIT" ->
-                        Decode.succeed Credit
-
-                    "DEBIT" ->
-                        Decode.succeed Debit
+                    "users_pkey" ->
+                        Decode.succeed Users_pkey
 
                     _ ->
-                        Decode.fail ("Invalid AccountType type, " ++ string ++ " try re-running the @dillonkearns/elm-graphql CLI ")
+                        Decode.fail ("Invalid Users_constraint type, " ++ string ++ " try re-running the @dillonkearns/elm-graphql CLI ")
             )
 
 
 {-| Convert from the union type representing the Enum to a string that the GraphQL server will recognize.
 -}
-toString : AccountType -> String
-toString enum =
-    case enum of
-        Credit ->
-            "CREDIT"
-
-        Debit ->
-            "DEBIT"
+toString : Users_constraint -> String
+toString enum____ =
+    case enum____ of
+        Users_pkey ->
+            "users_pkey"
 
 
 {-| Convert from a String representation to an elm representation enum.
@@ -57,14 +55,11 @@ This is the inverse of the Enum `toString` function. So you can call `toString` 
 This can be useful for generating Strings to use for <select> menus to check which item was selected.
 
 -}
-fromString : String -> Maybe AccountType
-fromString enumString =
-    case enumString of
-        "CREDIT" ->
-            Just Credit
-
-        "DEBIT" ->
-            Just Debit
+fromString : String -> Maybe Users_constraint
+fromString enumString____ =
+    case enumString____ of
+        "users_pkey" ->
+            Just Users_pkey
 
         _ ->
             Nothing

@@ -1,19 +1,22 @@
-module Page.Home exposing (Model, Msg(..), init, sessionOf, subscriptions, update, view)
+module Page.Home exposing (Model, Msg(..), init, sessionOf, subscriptions, update, updateSession, view)
 
+import Backend.Authentication
 import Backend.Graphql exposing (Data, getErrorMessages)
+import Browser.Navigation
 import Components.Icon exposing (icon)
 import Components.Loader as Loader
+import Config
 import Css
 import Html exposing (a, aside, div, footer, h2, li, main_, nav, p, span, text, ul)
 import Html.Events
-import MonisApp.Enum.AccountType as AccountType
-import Objects.Account exposing (Account, accountSelector)
+import Objects.Account exposing (Account)
 import Objects.Transaction as Transaction exposing (Transaction)
 import Objects.User exposing (User)
 import Page
 import RemoteData
 import Route
 import Session exposing (Session, SessionType(..))
+import Url
 
 
 type alias Model =
@@ -52,11 +55,17 @@ type Msg
     | GotTransactions (Data (List Transaction))
     | SelectAccount Account
     | ClearError String
+    | RedirectToAuth
 
 
 sessionOf : Model -> Session
 sessionOf =
     .session
+
+
+updateSession : Model -> (Session -> Session) -> Model
+updateSession model updater =
+    { model | session = updater model.session }
 
 
 init : Session -> ( Model, Cmd Msg )
@@ -125,6 +134,41 @@ update msg model =
                 _ ->
                     ( model, Cmd.none )
 
+        ( RedirectToAuth, _ ) ->
+            let
+                url =
+                    model.session.url
+
+                urlScheme =
+                    case url.protocol of
+                        Url.Http ->
+                            "http://"
+
+                        Url.Https ->
+                            "https://"
+
+                port_ =
+                    (case url.protocol of
+                        Url.Http ->
+                            url.port_ |> Maybe.withDefault 80
+
+                        Url.Https ->
+                            url.port_ |> Maybe.withDefault 443
+                    )
+                        |> String.fromInt
+
+                path =
+                    Route.toString Route.Authorize
+
+                config : Backend.Authentication.Configuration
+                config =
+                    Backend.Authentication.configuration
+                        (urlScheme ++ url.host ++ ":" ++ port_ ++ path)
+                        Config.auth0HostUrl
+                        Config.auth0ClientId
+            in
+            ( model, Browser.Navigation.load <| Backend.Authentication.authorizeRedirectUrl config )
+
         _ ->
             Debug.todo "This should never happen"
 
@@ -153,7 +197,8 @@ fetchAccounts model =
     in
     case session.kind of
         Session.LoggedIn user ->
-            Backend.Graphql.makeQueryRequest (Just user.token) accountSelector GotAccounts
+            -- Backend.Graphql.makeQueryRequest (Just user.token) accountSelector GotAccounts
+            Cmd.none
 
         Session.Guest ->
             Cmd.none
@@ -201,10 +246,10 @@ view model =
             , case model.state of
                 Guest ->
                     div [ Css.tw "flex flex-col w-1/5" ]
-                        [ a [ Css.btn "blue", Route.href Route.Login ]
-                            [ text "Login nowee!" ]
-                        , a [ Css.btn "pink", Route.href Route.Login ]
+                        [ a [ Css.btn "pink", Html.Events.onClick RedirectToAuth ]
                             [ text "do Login!" ]
+                        , a [ Css.btn "purple", Html.Events.onClick Logout ]
+                            [ text "Logout" ]
                         ]
 
                 NotGuest _ withUserState ->
@@ -223,20 +268,8 @@ view model =
 
                                                     NoSelectedAccount ->
                                                         False
-
-                                            ( debitAccounts, creditAccounts ) =
-                                                List.partition
-                                                    (\account ->
-                                                        case account.type_ of
-                                                            AccountType.Debit ->
-                                                                True
-
-                                                            AccountType.Credit ->
-                                                                False
-                                                    )
-                                                    accounts
                                          in
-                                         [ ( "Debit Accounts:", debitAccounts ), ( "Credit Accounts:", creditAccounts ) ]
+                                         [ ( "Accounts:", accounts ) ]
                                             |> List.map
                                                 (\( title, partialAccounts ) ->
                                                     if List.isEmpty partialAccounts then

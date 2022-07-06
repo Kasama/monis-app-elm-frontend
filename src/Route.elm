@@ -1,4 +1,4 @@
-module Route exposing (Route(..), fromUrl, href, replaceUrl)
+module Route exposing (Route(..), fromUrl, href, replaceUrl, routePaths, toString)
 
 import Browser.Navigation as Nav
 import Html exposing (Attribute)
@@ -10,7 +10,7 @@ import Util
 
 type Route
     = Home
-    | Login
+    | Authorize
     | NotFound
 
 
@@ -18,7 +18,7 @@ parser : Parser (Route -> a) a
 parser =
     oneOf
         [ Parser.map Home (routeParser Home)
-        , Parser.map Login (routeParser Login)
+        , Parser.map Authorize (routeParser Authorize)
         , Parser.map NotFound Parser.top
         ]
 
@@ -56,8 +56,8 @@ routePaths route =
         Home ->
             []
 
-        Login ->
-            [ "login" ]
+        Authorize ->
+            [ "auth" ]
 
         NotFound ->
             [ "notfound" ]

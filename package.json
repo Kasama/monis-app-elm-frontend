@@ -59,8 +59,7 @@
     "dev": "concurrently -k -n w: npm:watch:*",
     "watch:tailwind": "chokidar tailwind.config.js main.css postcss.config.js --initial -c 'yarn gen:tailwind'",
     "watch:webpack": "chokidar ./src/Ports.elm --initial -c 'yarn serve'",
-    "\"watch:webpack\": \"chokidar ./src/Ports.elm --initial -c 'yarn gen:typescript && yarn serve'\"": "",
-    "gen:graphql": "elm-graphql http://127.0.0.1:4000/graphiql --base MonisApp --output src",
+    "gen:graphql": "elm-graphql https://monisapp.hasura.app/v1/graphql --base MonisApp --output src",
     "gen:tailwind": "postcss -o dist/main.css main.css",
     "gen:typescript": "elm-ts-interop",
     "serve": "webpack-dev-server --hot --port 8000"

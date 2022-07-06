@@ -3,61 +3,94 @@ module Objects.Transaction exposing (Transaction, transactionQuery, transactionS
 import Graphql.Operation exposing (RootQuery)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet as SelectionSet exposing (SelectionSet)
+import MonisApp.InputObject exposing (buildTransactions_bool_exp, buildUuid_comparison_exp)
 import MonisApp.Object as Object
-import MonisApp.Object.Transaction as Transaction
+import MonisApp.Object.Transactions as Transactions
 import MonisApp.Query as Query
-import MonisApp.Scalar exposing (Id(..))
-import Objects.Category exposing (Category, categorySelector)
+import MonisApp.Scalar exposing (Timestamptz, Uuid(..))
+import Objects.QueryUtils as QueryUtils exposing (eq_, maybe_eq_)
 
 
 type alias Transaction =
-    { category : Category
-    , comment : Maybe String
-    , id : Id
+    { comment : Maybe String
+    , id : Uuid
     , payee : String
-    , transactionDate : String
-    , value : String
+    , transactionDate : Timestamptz
+    , value : Int
     }
 
 
 type alias QueryParams =
-    { accountId : Maybe Id
-    , categoryId : Maybe Id
+    { accountId : Maybe Uuid
+    , categoryId : Maybe Uuid
     }
 
 
-transactionByIdQuery : Id -> SelectionSet (List Transaction) RootQuery
+
+-- Query Utils
+
+
+where_ :
+    (MonisApp.InputObject.Transactions_bool_expOptionalFields -> MonisApp.InputObject.Transactions_bool_expOptionalFields)
+    -> { c | where_ : OptionalArgument MonisApp.InputObject.Transactions_bool_exp }
+    -> { c | where_ : OptionalArgument MonisApp.InputObject.Transactions_bool_exp }
+where_ =
+    QueryUtils.where_ buildTransactions_bool_exp
+
+
+and_ :
+    List
+        (MonisApp.InputObject.Transactions_bool_expOptionalFields -> MonisApp.InputObject.Transactions_bool_expOptionalFields)
+    -> { c | and_ : OptionalArgument (List MonisApp.InputObject.Transactions_bool_exp) }
+    -> { c | and_ : OptionalArgument (List MonisApp.InputObject.Transactions_bool_exp) }
+and_ =
+    QueryUtils.and_ buildTransactions_bool_exp
+
+
+
+-- Queries
+
+
+transactionByIdQuery : Uuid -> SelectionSet (List Transaction) RootQuery
 transactionByIdQuery id =
-    Query.transactions (\params -> { params | id = Present id }) transactionSelector
+    let
+        id_ val opts =
+            { opts | id = Present <| buildUuid_comparison_exp val }
+    in
+    Query.transactions
+        (where_ <|
+            id_ <|
+                eq_ id
+        )
+        transactionSelector
 
 
 transactionQuery : QueryParams -> SelectionSet (List Transaction) RootQuery
 transactionQuery args =
     let
-        fromMaybe ma =
-            case ma of
-                Just a ->
-                    Present a
+        account_id_ val opts =
+            { opts | account_id = Present <| buildUuid_comparison_exp val }
 
-                Nothing ->
-                    Absent
+        category_id_ val opts =
+            { opts | category_id = Present <| buildUuid_comparison_exp val }
     in
     Query.transactions
-        (\params ->
-            { params
-                | accountId = fromMaybe args.accountId
-                , categoryId = fromMaybe args.categoryId
-            }
+        (where_ <|
+            and_
+                [ account_id_ <|
+                    maybe_eq_ args.accountId
+                , category_id_ <|
+                    maybe_eq_ args.categoryId
+                ]
         )
         transactionSelector
 
 
-transactionSelector : SelectionSet Transaction Object.Transaction
+transactionSelector : SelectionSet Transaction Object.Transactions
 transactionSelector =
-    SelectionSet.map6 Transaction
-        (Transaction.category categorySelector)
-        Transaction.comment
-        Transaction.id
-        Transaction.payee
-        Transaction.transactionDate
-        Transaction.value
+    SelectionSet.map5 Transaction
+        Transactions.comment
+        Transactions.id
+        Transactions.payee
+        Transactions.created_at
+        Transactions.amount

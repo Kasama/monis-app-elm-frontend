@@ -4,6 +4,7 @@ import Json.Decode as Json
 import Url exposing (Protocol(..), Url)
 import Url.Parser exposing ((</>), (<?>), Parser)
 import Url.Parser.Query
+import Config
 
 
 type Session
@@ -24,6 +25,7 @@ type alias Configuration =
     , clientId : String
     , scope : List String
     , redirectUri : String
+    , audience : String
     }
 
 
@@ -57,7 +59,8 @@ configuration redirectUri host clientId =
             (Json.field "name" Json.string)
             (Json.field "picture" Json.string)
     , clientId = clientId
-    , scope = [ "openid", "profile" ]
+    , scope = [ "openid", "profile", "email", "offline_access" ]
+    , audience = Config.auth0Audience
     , redirectUri = redirectUri
     }
 
@@ -73,7 +76,9 @@ authorizeRedirectUrl config =
             | query =
                 Just <|
                     String.join "&"
-                        [ "response_type=token"
+                        [ "response_type=id_token token"
+                        , "nonce=batatinhafrita"
+                        , "audience=" ++ config.audience
                         , "client_id=" ++ config.clientId
                         , "redirect_uri=" ++ config.redirectUri
                         , "scope=" ++ String.join " " config.scope
@@ -87,6 +92,7 @@ authorizeRedirectUrl config =
 
 type alias AuthInfo =
     { token : String
+    , id_token : String
     , scopes : List String
     , expires_in : Int
     , token_type : String
@@ -96,8 +102,9 @@ type alias AuthInfo =
 authTokenParser : Parser (AuthInfo -> b) b
 authTokenParser =
     Url.Parser.query
-        (Url.Parser.Query.map4 AuthInfo
+        (Url.Parser.Query.map5 AuthInfo
             (Url.Parser.Query.string "access_token" |> Url.Parser.Query.map (Maybe.withDefault ""))
+            (Url.Parser.Query.string "id_token" |> Url.Parser.Query.map (Maybe.withDefault ""))
             (Url.Parser.Query.string "scope" |> Url.Parser.Query.map (String.split " " << Maybe.withDefault ""))
             (Url.Parser.Query.int "expires_in" |> Url.Parser.Query.map (Maybe.withDefault 0))
             (Url.Parser.Query.string "token_type" |> Url.Parser.Query.map (Maybe.withDefault "Bearer"))

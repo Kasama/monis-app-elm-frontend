@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module MonisApp.Object.RegisterPayload exposing (..)
+module MonisApp.Object.Users_min_fields exposing (..)
 
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
@@ -19,13 +19,16 @@ import MonisApp.ScalarCodecs
 import MonisApp.Union
 
 
-token : SelectionSet String MonisApp.Object.RegisterPayload
-token =
-    Object.selectionForField "String" "token" [] Decode.string
+email : SelectionSet (Maybe String) MonisApp.Object.Users_min_fields
+email =
+    Object.selectionForField "(Maybe String)" "email" [] (Decode.string |> Decode.nullable)
 
 
-user :
-    SelectionSet decodesTo MonisApp.Object.User
-    -> SelectionSet decodesTo MonisApp.Object.RegisterPayload
-user object_ =
-    Object.selectionForCompositeField "user" [] object_ identity
+id : SelectionSet (Maybe String) MonisApp.Object.Users_min_fields
+id =
+    Object.selectionForField "(Maybe String)" "id" [] (Decode.string |> Decode.nullable)
+
+
+name : SelectionSet (Maybe String) MonisApp.Object.Users_min_fields
+name =
+    Object.selectionForField "(Maybe String)" "name" [] (Decode.string |> Decode.nullable)

@@ -1,11 +1,11 @@
 module Main exposing (Msg(..), main)
 
+import Backend.Authentication
 import Browser
 import Browser.Navigation as Nav
 import Html
 import Page
 import Page.Home as HomePage
-import Page.Login as LoginPage
 import Route exposing (Route)
 import Session exposing (Session, StoredSession)
 import Url exposing (Url)
@@ -15,18 +15,15 @@ type Msg
     = ChangedUrl Url
     | ClickedLink Browser.UrlRequest
     | HomeMsg HomePage.Msg
-    | LoginMsg LoginPage.Msg
 
 
 type alias Model =
     { page : PageModel
-    , url : Url
     }
 
 
 type PageModel
     = Home HomePage.Model
-    | Login LoginPage.Model
     | Redirect Session
     | NotFound Session
 
@@ -40,18 +37,27 @@ sessionOf model =
         Home homeModel ->
             HomePage.sessionOf homeModel
 
-        Login loginModel ->
-            LoginPage.sessionOf loginModel
-
         NotFound session ->
             session
+
+
+updateSession : Model -> (Session -> Session) -> Model
+updateSession model updater =
+    case model.page of
+        Redirect session ->
+            { model | page = Redirect <| updater session }
+
+        Home homeModel ->
+            { model | page = Home <| HomePage.updateSession homeModel updater }
+
+        NotFound session ->
+            { model | page = NotFound <| updater session }
 
 
 state : StoredSession -> Url -> Nav.Key -> ( Model, Cmd Msg )
 state userSession url key =
     changeRoute (Route.fromUrl url)
-        { page = Redirect (Session.fromStoredSession key userSession)
-        , url = url
+        { page = Redirect (Session.fromStoredSession key userSession url)
         }
 
 
@@ -67,14 +73,36 @@ changeRoute maybeRoute model =
             sessionOf model
     in
     case maybeRoute of
-
         Just Route.Home ->
             HomePage.init session
                 |> wrapWith model Home HomeMsg
 
-        Just Route.Login ->
-            LoginPage.init session
-                |> wrapWith model Login LoginMsg
+        Just Route.Authorize ->
+            let
+                authInfo : Maybe Backend.Authentication.AuthInfo
+                authInfo =
+                    Backend.Authentication.parseCallbackUrl session.url
+            in
+            case Debug.log "authinfo" authInfo of
+                Nothing ->
+                    HomePage.init session
+                        |> wrapWith model Home HomeMsg
+
+                Just auth ->
+                    let
+                        newSession =
+                            { session
+                                | kind =
+                                    Session.LoggedIn
+                                        { email = ""
+                                        , id = ""
+                                        , isActive = True
+                                        , name = ""
+                                        , token = auth.id_token
+                                        }
+                            }
+                    in
+                    ( updateSession model (\_ -> newSession), Route.replaceUrl session.navKey Route.Home )
 
         Just Route.NotFound ->
             ( { model | page = NotFound session }, Cmd.none )
@@ -95,11 +123,7 @@ update msg model =
                     ( model, Nav.load url )
 
         ( ChangedUrl url, _ ) ->
-            changeRoute (Route.fromUrl url) model
-
-        ( LoginMsg loginMsg, Login loginModel ) ->
-            LoginPage.update loginMsg loginModel
-                |> wrapWith model Login LoginMsg
+            changeRoute (Route.fromUrl url) (updateSession model (\s -> { s | url = url }))
 
         ( HomeMsg homeMsg, Home homeModel ) ->
             HomePage.update homeMsg homeModel
@@ -131,9 +155,6 @@ view model =
         Home home ->
             viewPage Page.Home HomeMsg (HomePage.view home)
 
-        Login login ->
-            viewPage Page.Login LoginMsg (LoginPage.view login)
-
         NotFound _ ->
             { title = "Page Not Found"
             , body = [ Html.text "Page Not Found" ]
@@ -146,10 +167,6 @@ subscriptions model =
         Home home ->
             HomePage.subscriptions home
                 |> Sub.map HomeMsg
-
-        Login login ->
-            LoginPage.subscriptions login
-                |> Sub.map LoginMsg
 
         Redirect _ ->
             Sub.none

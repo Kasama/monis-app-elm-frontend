@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module MonisApp.Scalar exposing (Codecs, Id(..), defaultCodecs, defineCodecs, unwrapCodecs, unwrapEncoder)
+module MonisApp.Scalar exposing (Codecs, Timestamptz(..), Uuid(..), defaultCodecs, defineCodecs, unwrapCodecs, unwrapEncoder)
 
 import Graphql.Codec exposing (Codec)
 import Graphql.Internal.Builder.Object as Object
@@ -11,45 +11,60 @@ import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
 
 
-type Id
-    = Id String
+type Timestamptz
+    = Timestamptz String
+
+
+type Uuid
+    = Uuid String
 
 
 defineCodecs :
-    { codecId : Codec valueId }
-    -> Codecs valueId
+    { codecTimestamptz : Codec valueTimestamptz
+    , codecUuid : Codec valueUuid
+    }
+    -> Codecs valueTimestamptz valueUuid
 defineCodecs definitions =
     Codecs definitions
 
 
 unwrapCodecs :
-    Codecs valueId
-    -> { codecId : Codec valueId }
+    Codecs valueTimestamptz valueUuid
+    ->
+        { codecTimestamptz : Codec valueTimestamptz
+        , codecUuid : Codec valueUuid
+        }
 unwrapCodecs (Codecs unwrappedCodecs) =
     unwrappedCodecs
 
 
 unwrapEncoder :
-    (RawCodecs valueId -> Codec getterValue)
-    -> Codecs valueId
+    (RawCodecs valueTimestamptz valueUuid -> Codec getterValue)
+    -> Codecs valueTimestamptz valueUuid
     -> getterValue
     -> Graphql.Internal.Encode.Value
 unwrapEncoder getter (Codecs unwrappedCodecs) =
     (unwrappedCodecs |> getter |> .encoder) >> Graphql.Internal.Encode.fromJson
 
 
-type Codecs valueId
-    = Codecs (RawCodecs valueId)
+type Codecs valueTimestamptz valueUuid
+    = Codecs (RawCodecs valueTimestamptz valueUuid)
 
 
-type alias RawCodecs valueId =
-    { codecId : Codec valueId }
+type alias RawCodecs valueTimestamptz valueUuid =
+    { codecTimestamptz : Codec valueTimestamptz
+    , codecUuid : Codec valueUuid
+    }
 
 
-defaultCodecs : RawCodecs Id
+defaultCodecs : RawCodecs Timestamptz Uuid
 defaultCodecs =
-    { codecId =
-        { encoder = \(Id raw) -> Encode.string raw
-        , decoder = Object.scalarDecoder |> Decode.map Id
+    { codecTimestamptz =
+        { encoder = \(Timestamptz raw) -> Encode.string raw
+        , decoder = Object.scalarDecoder |> Decode.map Timestamptz
+        }
+    , codecUuid =
+        { encoder = \(Uuid raw) -> Encode.string raw
+        , decoder = Object.scalarDecoder |> Decode.map Uuid
         }
     }

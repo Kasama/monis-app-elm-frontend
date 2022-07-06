@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module MonisApp.Object.User exposing (..)
+module MonisApp.Object.Accounts_mutation_response exposing (..)
 
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
@@ -19,23 +19,17 @@ import MonisApp.ScalarCodecs
 import MonisApp.Union
 
 
-email : SelectionSet String MonisApp.Object.User
-email =
-    Object.selectionForField "String" "email" [] Decode.string
-
-
-{-| The ID of an object
+{-| number of rows affected by the mutation
 -}
-id : SelectionSet MonisApp.ScalarCodecs.Id MonisApp.Object.User
-id =
-    Object.selectionForField "ScalarCodecs.Id" "id" [] (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapCodecs |> .codecId |> .decoder)
+affected_rows : SelectionSet Int MonisApp.Object.Accounts_mutation_response
+affected_rows =
+    Object.selectionForField "Int" "affected_rows" [] Decode.int
 
 
-isActive : SelectionSet Bool MonisApp.Object.User
-isActive =
-    Object.selectionForField "Bool" "isActive" [] Decode.bool
-
-
-name : SelectionSet String MonisApp.Object.User
-name =
-    Object.selectionForField "String" "name" [] Decode.string
+{-| data from the rows affected by the mutation
+-}
+returning :
+    SelectionSet decodesTo MonisApp.Object.Accounts
+    -> SelectionSet (List decodesTo) MonisApp.Object.Accounts_mutation_response
+returning object____ =
+    Object.selectionForCompositeField "returning" [] object____ (Basics.identity >> Decode.list)

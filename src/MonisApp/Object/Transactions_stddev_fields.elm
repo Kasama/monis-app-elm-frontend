@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module MonisApp.Object.CreateAccountPayload exposing (..)
+module MonisApp.Object.Transactions_stddev_fields exposing (..)
 
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
@@ -19,8 +19,6 @@ import MonisApp.ScalarCodecs
 import MonisApp.Union
 
 
-account :
-    SelectionSet decodesTo MonisApp.Object.Account
-    -> SelectionSet decodesTo MonisApp.Object.CreateAccountPayload
-account object_ =
-    Object.selectionForCompositeField "account" [] object_ identity
+amount : SelectionSet (Maybe Float) MonisApp.Object.Transactions_stddev_fields
+amount =
+    Object.selectionForField "(Maybe Float)" "amount" [] (Decode.float |> Decode.nullable)

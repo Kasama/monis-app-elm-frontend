@@ -8,12 +8,17 @@ import Json.Decode as Decode exposing (Decoder)
 import MonisApp.Scalar exposing (defaultCodecs)
 
 
-type alias Id =
-    MonisApp.Scalar.Id
+type alias Timestamptz =
+    MonisApp.Scalar.Timestamptz
 
 
-codecs : MonisApp.Scalar.Codecs Id
+type alias Uuid =
+    MonisApp.Scalar.Uuid
+
+
+codecs : MonisApp.Scalar.Codecs Timestamptz Uuid
 codecs =
     MonisApp.Scalar.defineCodecs
-        { codecId = defaultCodecs.codecId
+        { codecTimestamptz = defaultCodecs.codecTimestamptz
+        , codecUuid = defaultCodecs.codecUuid
         }

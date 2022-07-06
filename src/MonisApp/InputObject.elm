@@ -10,7 +10,15 @@ import Graphql.Internal.Encode as Encode exposing (Value)
 import Graphql.OptionalArgument exposing (OptionalArgument(..))
 import Graphql.SelectionSet exposing (SelectionSet)
 import Json.Decode as Decode
-import MonisApp.Enum.AccountType
+import MonisApp.Enum.Accounts_constraint
+import MonisApp.Enum.Accounts_update_column
+import MonisApp.Enum.Categories_constraint
+import MonisApp.Enum.Categories_update_column
+import MonisApp.Enum.Order_by
+import MonisApp.Enum.Transactions_constraint
+import MonisApp.Enum.Transactions_update_column
+import MonisApp.Enum.Users_constraint
+import MonisApp.Enum.Users_update_column
 import MonisApp.Interface
 import MonisApp.Object
 import MonisApp.Scalar
@@ -18,150 +26,1683 @@ import MonisApp.ScalarCodecs
 import MonisApp.Union
 
 
-buildCreateAccountInput :
-    CreateAccountInputRequiredFields
-    -> (CreateAccountInputOptionalFields -> CreateAccountInputOptionalFields)
-    -> CreateAccountInput
-buildCreateAccountInput required fillOptionals =
+buildAccounts_bool_exp :
+    (Accounts_bool_expOptionalFields -> Accounts_bool_expOptionalFields)
+    -> Accounts_bool_exp
+buildAccounts_bool_exp fillOptionals____ =
     let
-        optionals =
-            fillOptionals
-                { amount = Absent, currency = Absent, icon = Absent }
+        optionals____ =
+            fillOptionals____
+                { and_ = Absent, not_ = Absent, or_ = Absent, created_at = Absent, deleted = Absent, id = Absent, name = Absent, updated_at = Absent, user = Absent, user_id = Absent }
     in
-    { amount = optionals.amount, currency = optionals.currency, icon = optionals.icon, name = required.name, type_ = required.type_ }
+    Accounts_bool_exp { and_ = optionals____.and_, not_ = optionals____.not_, or_ = optionals____.or_, created_at = optionals____.created_at, deleted = optionals____.deleted, id = optionals____.id, name = optionals____.name, updated_at = optionals____.updated_at, user = optionals____.user, user_id = optionals____.user_id }
 
 
-type alias CreateAccountInputRequiredFields =
-    { name : String
-    , type_ : MonisApp.Enum.AccountType.AccountType
+type alias Accounts_bool_expOptionalFields =
+    { and_ : OptionalArgument (List Accounts_bool_exp)
+    , not_ : OptionalArgument Accounts_bool_exp
+    , or_ : OptionalArgument (List Accounts_bool_exp)
+    , created_at : OptionalArgument Timestamptz_comparison_exp
+    , deleted : OptionalArgument Boolean_comparison_exp
+    , id : OptionalArgument Uuid_comparison_exp
+    , name : OptionalArgument String_comparison_exp
+    , updated_at : OptionalArgument Timestamptz_comparison_exp
+    , user : OptionalArgument Users_bool_exp
+    , user_id : OptionalArgument String_comparison_exp
     }
 
 
-type alias CreateAccountInputOptionalFields =
-    { amount : OptionalArgument String
-    , currency : OptionalArgument String
-    , icon : OptionalArgument String
-    }
-
-
-{-| Type for the CreateAccountInput input object.
+{-| Type alias for the `Accounts_bool_exp` attributes. Note that this type
+needs to use the `Accounts_bool_exp` type (not just a plain type alias) because it has
+references to itself either directly (recursive) or indirectly (circular). See
+<https://github.com/dillonkearns/elm-graphql/issues/33>.
 -}
-type alias CreateAccountInput =
-    { amount : OptionalArgument String
-    , currency : OptionalArgument String
-    , icon : OptionalArgument String
-    , name : String
-    , type_ : MonisApp.Enum.AccountType.AccountType
+type alias Accounts_bool_expRaw =
+    { and_ : OptionalArgument (List Accounts_bool_exp)
+    , not_ : OptionalArgument Accounts_bool_exp
+    , or_ : OptionalArgument (List Accounts_bool_exp)
+    , created_at : OptionalArgument Timestamptz_comparison_exp
+    , deleted : OptionalArgument Boolean_comparison_exp
+    , id : OptionalArgument Uuid_comparison_exp
+    , name : OptionalArgument String_comparison_exp
+    , updated_at : OptionalArgument Timestamptz_comparison_exp
+    , user : OptionalArgument Users_bool_exp
+    , user_id : OptionalArgument String_comparison_exp
     }
 
 
-{-| Encode a CreateAccountInput into a value that can be used as an argument.
+{-| Type for the Accounts\_bool\_exp input object.
 -}
-encodeCreateAccountInput : CreateAccountInput -> Value
-encodeCreateAccountInput input =
+type Accounts_bool_exp
+    = Accounts_bool_exp Accounts_bool_expRaw
+
+
+{-| Encode a Accounts\_bool\_exp into a value that can be used as an argument.
+-}
+encodeAccounts_bool_exp : Accounts_bool_exp -> Value
+encodeAccounts_bool_exp (Accounts_bool_exp input____) =
     Encode.maybeObject
-        [ ( "amount", Encode.string |> Encode.optional input.amount ), ( "currency", Encode.string |> Encode.optional input.currency ), ( "icon", Encode.string |> Encode.optional input.icon ), ( "name", Encode.string input.name |> Just ), ( "type", Encode.enum MonisApp.Enum.AccountType.toString input.type_ |> Just ) ]
+        [ ( "_and", (encodeAccounts_bool_exp |> Encode.list) |> Encode.optional input____.and_ ), ( "_not", encodeAccounts_bool_exp |> Encode.optional input____.not_ ), ( "_or", (encodeAccounts_bool_exp |> Encode.list) |> Encode.optional input____.or_ ), ( "created_at", encodeTimestamptz_comparison_exp |> Encode.optional input____.created_at ), ( "deleted", encodeBoolean_comparison_exp |> Encode.optional input____.deleted ), ( "id", encodeUuid_comparison_exp |> Encode.optional input____.id ), ( "name", encodeString_comparison_exp |> Encode.optional input____.name ), ( "updated_at", encodeTimestamptz_comparison_exp |> Encode.optional input____.updated_at ), ( "user", encodeUsers_bool_exp |> Encode.optional input____.user ), ( "user_id", encodeString_comparison_exp |> Encode.optional input____.user_id ) ]
 
 
-buildCreateTransactionInput :
-    CreateTransactionInputRequiredFields
-    -> (CreateTransactionInputOptionalFields -> CreateTransactionInputOptionalFields)
-    -> CreateTransactionInput
-buildCreateTransactionInput required fillOptionals =
+buildAccounts_insert_input :
+    (Accounts_insert_inputOptionalFields -> Accounts_insert_inputOptionalFields)
+    -> Accounts_insert_input
+buildAccounts_insert_input fillOptionals____ =
     let
-        optionals =
-            fillOptionals
-                { comment = Absent }
+        optionals____ =
+            fillOptionals____
+                { created_at = Absent, deleted = Absent, id = Absent, name = Absent, updated_at = Absent, user = Absent, user_id = Absent }
     in
-    { accountId = required.accountId, categoryId = required.categoryId, comment = optionals.comment, payee = required.payee, transactionDate = required.transactionDate, value = required.value }
+    Accounts_insert_input { created_at = optionals____.created_at, deleted = optionals____.deleted, id = optionals____.id, name = optionals____.name, updated_at = optionals____.updated_at, user = optionals____.user, user_id = optionals____.user_id }
 
 
-type alias CreateTransactionInputRequiredFields =
-    { accountId : MonisApp.ScalarCodecs.Id
-    , categoryId : MonisApp.ScalarCodecs.Id
-    , payee : String
-    , transactionDate : String
-    , value : String
+type alias Accounts_insert_inputOptionalFields =
+    { created_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , deleted : OptionalArgument Bool
+    , id : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , name : OptionalArgument String
+    , updated_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , user : OptionalArgument Users_obj_rel_insert_input
+    , user_id : OptionalArgument String
     }
 
 
-type alias CreateTransactionInputOptionalFields =
-    { comment : OptionalArgument String }
-
-
-{-| Type for the CreateTransactionInput input object.
+{-| Type alias for the `Accounts_insert_input` attributes. Note that this type
+needs to use the `Accounts_insert_input` type (not just a plain type alias) because it has
+references to itself either directly (recursive) or indirectly (circular). See
+<https://github.com/dillonkearns/elm-graphql/issues/33>.
 -}
-type alias CreateTransactionInput =
-    { accountId : MonisApp.ScalarCodecs.Id
-    , categoryId : MonisApp.ScalarCodecs.Id
+type alias Accounts_insert_inputRaw =
+    { created_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , deleted : OptionalArgument Bool
+    , id : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , name : OptionalArgument String
+    , updated_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , user : OptionalArgument Users_obj_rel_insert_input
+    , user_id : OptionalArgument String
+    }
+
+
+{-| Type for the Accounts\_insert\_input input object.
+-}
+type Accounts_insert_input
+    = Accounts_insert_input Accounts_insert_inputRaw
+
+
+{-| Encode a Accounts\_insert\_input into a value that can be used as an argument.
+-}
+encodeAccounts_insert_input : Accounts_insert_input -> Value
+encodeAccounts_insert_input (Accounts_insert_input input____) =
+    Encode.maybeObject
+        [ ( "created_at", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.created_at ), ( "deleted", Encode.bool |> Encode.optional input____.deleted ), ( "id", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.id ), ( "name", Encode.string |> Encode.optional input____.name ), ( "updated_at", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.updated_at ), ( "user", encodeUsers_obj_rel_insert_input |> Encode.optional input____.user ), ( "user_id", Encode.string |> Encode.optional input____.user_id ) ]
+
+
+buildAccounts_obj_rel_insert_input :
+    Accounts_obj_rel_insert_inputRequiredFields
+    -> (Accounts_obj_rel_insert_inputOptionalFields -> Accounts_obj_rel_insert_inputOptionalFields)
+    -> Accounts_obj_rel_insert_input
+buildAccounts_obj_rel_insert_input required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { on_conflict = Absent }
+    in
+    Accounts_obj_rel_insert_input { data = required____.data, on_conflict = optionals____.on_conflict }
+
+
+type alias Accounts_obj_rel_insert_inputRequiredFields =
+    { data : Accounts_insert_input }
+
+
+type alias Accounts_obj_rel_insert_inputOptionalFields =
+    { on_conflict : OptionalArgument Accounts_on_conflict }
+
+
+{-| Type alias for the `Accounts_obj_rel_insert_input` attributes. Note that this type
+needs to use the `Accounts_obj_rel_insert_input` type (not just a plain type alias) because it has
+references to itself either directly (recursive) or indirectly (circular). See
+<https://github.com/dillonkearns/elm-graphql/issues/33>.
+-}
+type alias Accounts_obj_rel_insert_inputRaw =
+    { data : Accounts_insert_input
+    , on_conflict : OptionalArgument Accounts_on_conflict
+    }
+
+
+{-| Type for the Accounts\_obj\_rel\_insert\_input input object.
+-}
+type Accounts_obj_rel_insert_input
+    = Accounts_obj_rel_insert_input Accounts_obj_rel_insert_inputRaw
+
+
+{-| Encode a Accounts\_obj\_rel\_insert\_input into a value that can be used as an argument.
+-}
+encodeAccounts_obj_rel_insert_input : Accounts_obj_rel_insert_input -> Value
+encodeAccounts_obj_rel_insert_input (Accounts_obj_rel_insert_input input____) =
+    Encode.maybeObject
+        [ ( "data", encodeAccounts_insert_input input____.data |> Just ), ( "on_conflict", encodeAccounts_on_conflict |> Encode.optional input____.on_conflict ) ]
+
+
+buildAccounts_on_conflict :
+    Accounts_on_conflictRequiredFields
+    -> (Accounts_on_conflictOptionalFields -> Accounts_on_conflictOptionalFields)
+    -> Accounts_on_conflict
+buildAccounts_on_conflict required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { where_ = Absent }
+    in
+    Accounts_on_conflict { constraint = required____.constraint, update_columns = required____.update_columns, where_ = optionals____.where_ }
+
+
+type alias Accounts_on_conflictRequiredFields =
+    { constraint : MonisApp.Enum.Accounts_constraint.Accounts_constraint
+    , update_columns : List MonisApp.Enum.Accounts_update_column.Accounts_update_column
+    }
+
+
+type alias Accounts_on_conflictOptionalFields =
+    { where_ : OptionalArgument Accounts_bool_exp }
+
+
+{-| Type alias for the `Accounts_on_conflict` attributes. Note that this type
+needs to use the `Accounts_on_conflict` type (not just a plain type alias) because it has
+references to itself either directly (recursive) or indirectly (circular). See
+<https://github.com/dillonkearns/elm-graphql/issues/33>.
+-}
+type alias Accounts_on_conflictRaw =
+    { constraint : MonisApp.Enum.Accounts_constraint.Accounts_constraint
+    , update_columns : List MonisApp.Enum.Accounts_update_column.Accounts_update_column
+    , where_ : OptionalArgument Accounts_bool_exp
+    }
+
+
+{-| Type for the Accounts\_on\_conflict input object.
+-}
+type Accounts_on_conflict
+    = Accounts_on_conflict Accounts_on_conflictRaw
+
+
+{-| Encode a Accounts\_on\_conflict into a value that can be used as an argument.
+-}
+encodeAccounts_on_conflict : Accounts_on_conflict -> Value
+encodeAccounts_on_conflict (Accounts_on_conflict input____) =
+    Encode.maybeObject
+        [ ( "constraint", Encode.enum MonisApp.Enum.Accounts_constraint.toString input____.constraint |> Just ), ( "update_columns", (Encode.enum MonisApp.Enum.Accounts_update_column.toString |> Encode.list) input____.update_columns |> Just ), ( "where", encodeAccounts_bool_exp |> Encode.optional input____.where_ ) ]
+
+
+buildAccounts_order_by :
+    (Accounts_order_byOptionalFields -> Accounts_order_byOptionalFields)
+    -> Accounts_order_by
+buildAccounts_order_by fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { created_at = Absent, deleted = Absent, id = Absent, name = Absent, updated_at = Absent, user = Absent, user_id = Absent }
+    in
+    { created_at = optionals____.created_at, deleted = optionals____.deleted, id = optionals____.id, name = optionals____.name, updated_at = optionals____.updated_at, user = optionals____.user, user_id = optionals____.user_id }
+
+
+type alias Accounts_order_byOptionalFields =
+    { created_at : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , deleted : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , id : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , name : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , updated_at : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , user : OptionalArgument Users_order_by
+    , user_id : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    }
+
+
+{-| Type for the Accounts\_order\_by input object.
+-}
+type alias Accounts_order_by =
+    { created_at : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , deleted : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , id : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , name : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , updated_at : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , user : OptionalArgument Users_order_by
+    , user_id : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    }
+
+
+{-| Encode a Accounts\_order\_by into a value that can be used as an argument.
+-}
+encodeAccounts_order_by : Accounts_order_by -> Value
+encodeAccounts_order_by input____ =
+    Encode.maybeObject
+        [ ( "created_at", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.created_at ), ( "deleted", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.deleted ), ( "id", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.id ), ( "name", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.name ), ( "updated_at", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.updated_at ), ( "user", encodeUsers_order_by |> Encode.optional input____.user ), ( "user_id", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.user_id ) ]
+
+
+buildAccounts_pk_columns_input :
+    Accounts_pk_columns_inputRequiredFields
+    -> Accounts_pk_columns_input
+buildAccounts_pk_columns_input required____ =
+    { id = required____.id }
+
+
+type alias Accounts_pk_columns_inputRequiredFields =
+    { id : MonisApp.ScalarCodecs.Uuid }
+
+
+{-| Type for the Accounts\_pk\_columns\_input input object.
+-}
+type alias Accounts_pk_columns_input =
+    { id : MonisApp.ScalarCodecs.Uuid }
+
+
+{-| Encode a Accounts\_pk\_columns\_input into a value that can be used as an argument.
+-}
+encodeAccounts_pk_columns_input : Accounts_pk_columns_input -> Value
+encodeAccounts_pk_columns_input input____ =
+    Encode.maybeObject
+        [ ( "id", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) input____.id |> Just ) ]
+
+
+buildAccounts_set_input :
+    (Accounts_set_inputOptionalFields -> Accounts_set_inputOptionalFields)
+    -> Accounts_set_input
+buildAccounts_set_input fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { created_at = Absent, deleted = Absent, id = Absent, name = Absent, updated_at = Absent, user_id = Absent }
+    in
+    { created_at = optionals____.created_at, deleted = optionals____.deleted, id = optionals____.id, name = optionals____.name, updated_at = optionals____.updated_at, user_id = optionals____.user_id }
+
+
+type alias Accounts_set_inputOptionalFields =
+    { created_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , deleted : OptionalArgument Bool
+    , id : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , name : OptionalArgument String
+    , updated_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , user_id : OptionalArgument String
+    }
+
+
+{-| Type for the Accounts\_set\_input input object.
+-}
+type alias Accounts_set_input =
+    { created_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , deleted : OptionalArgument Bool
+    , id : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , name : OptionalArgument String
+    , updated_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , user_id : OptionalArgument String
+    }
+
+
+{-| Encode a Accounts\_set\_input into a value that can be used as an argument.
+-}
+encodeAccounts_set_input : Accounts_set_input -> Value
+encodeAccounts_set_input input____ =
+    Encode.maybeObject
+        [ ( "created_at", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.created_at ), ( "deleted", Encode.bool |> Encode.optional input____.deleted ), ( "id", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.id ), ( "name", Encode.string |> Encode.optional input____.name ), ( "updated_at", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.updated_at ), ( "user_id", Encode.string |> Encode.optional input____.user_id ) ]
+
+
+buildBoolean_cast_exp :
+    (Boolean_cast_expOptionalFields -> Boolean_cast_expOptionalFields)
+    -> Boolean_cast_exp
+buildBoolean_cast_exp fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { string = Absent }
+    in
+    { string = optionals____.string }
+
+
+type alias Boolean_cast_expOptionalFields =
+    { string : OptionalArgument String_comparison_exp }
+
+
+{-| Type for the Boolean\_cast\_exp input object.
+-}
+type alias Boolean_cast_exp =
+    { string : OptionalArgument String_comparison_exp }
+
+
+{-| Encode a Boolean\_cast\_exp into a value that can be used as an argument.
+-}
+encodeBoolean_cast_exp : Boolean_cast_exp -> Value
+encodeBoolean_cast_exp input____ =
+    Encode.maybeObject
+        [ ( "String", encodeString_comparison_exp |> Encode.optional input____.string ) ]
+
+
+buildBoolean_comparison_exp :
+    (Boolean_comparison_expOptionalFields -> Boolean_comparison_expOptionalFields)
+    -> Boolean_comparison_exp
+buildBoolean_comparison_exp fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { cast_ = Absent, eq_ = Absent, gt_ = Absent, gte_ = Absent, in_ = Absent, is_null_ = Absent, lt_ = Absent, lte_ = Absent, neq_ = Absent, nin_ = Absent }
+    in
+    { cast_ = optionals____.cast_, eq_ = optionals____.eq_, gt_ = optionals____.gt_, gte_ = optionals____.gte_, in_ = optionals____.in_, is_null_ = optionals____.is_null_, lt_ = optionals____.lt_, lte_ = optionals____.lte_, neq_ = optionals____.neq_, nin_ = optionals____.nin_ }
+
+
+type alias Boolean_comparison_expOptionalFields =
+    { cast_ : OptionalArgument Boolean_cast_exp
+    , eq_ : OptionalArgument Bool
+    , gt_ : OptionalArgument Bool
+    , gte_ : OptionalArgument Bool
+    , in_ : OptionalArgument (List Bool)
+    , is_null_ : OptionalArgument Bool
+    , lt_ : OptionalArgument Bool
+    , lte_ : OptionalArgument Bool
+    , neq_ : OptionalArgument Bool
+    , nin_ : OptionalArgument (List Bool)
+    }
+
+
+{-| Type for the Boolean\_comparison\_exp input object.
+-}
+type alias Boolean_comparison_exp =
+    { cast_ : OptionalArgument Boolean_cast_exp
+    , eq_ : OptionalArgument Bool
+    , gt_ : OptionalArgument Bool
+    , gte_ : OptionalArgument Bool
+    , in_ : OptionalArgument (List Bool)
+    , is_null_ : OptionalArgument Bool
+    , lt_ : OptionalArgument Bool
+    , lte_ : OptionalArgument Bool
+    , neq_ : OptionalArgument Bool
+    , nin_ : OptionalArgument (List Bool)
+    }
+
+
+{-| Encode a Boolean\_comparison\_exp into a value that can be used as an argument.
+-}
+encodeBoolean_comparison_exp : Boolean_comparison_exp -> Value
+encodeBoolean_comparison_exp input____ =
+    Encode.maybeObject
+        [ ( "_cast", encodeBoolean_cast_exp |> Encode.optional input____.cast_ ), ( "_eq", Encode.bool |> Encode.optional input____.eq_ ), ( "_gt", Encode.bool |> Encode.optional input____.gt_ ), ( "_gte", Encode.bool |> Encode.optional input____.gte_ ), ( "_in", (Encode.bool |> Encode.list) |> Encode.optional input____.in_ ), ( "_is_null", Encode.bool |> Encode.optional input____.is_null_ ), ( "_lt", Encode.bool |> Encode.optional input____.lt_ ), ( "_lte", Encode.bool |> Encode.optional input____.lte_ ), ( "_neq", Encode.bool |> Encode.optional input____.neq_ ), ( "_nin", (Encode.bool |> Encode.list) |> Encode.optional input____.nin_ ) ]
+
+
+buildCategories_bool_exp :
+    (Categories_bool_expOptionalFields -> Categories_bool_expOptionalFields)
+    -> Categories_bool_exp
+buildCategories_bool_exp fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { and_ = Absent, not_ = Absent, or_ = Absent, account = Absent, created_at = Absent, deleted = Absent, icon = Absent, id = Absent, name = Absent, type_ = Absent, updated_at = Absent, user_id = Absent }
+    in
+    Categories_bool_exp { and_ = optionals____.and_, not_ = optionals____.not_, or_ = optionals____.or_, account = optionals____.account, created_at = optionals____.created_at, deleted = optionals____.deleted, icon = optionals____.icon, id = optionals____.id, name = optionals____.name, type_ = optionals____.type_, updated_at = optionals____.updated_at, user_id = optionals____.user_id }
+
+
+type alias Categories_bool_expOptionalFields =
+    { and_ : OptionalArgument (List Categories_bool_exp)
+    , not_ : OptionalArgument Categories_bool_exp
+    , or_ : OptionalArgument (List Categories_bool_exp)
+    , account : OptionalArgument Uuid_comparison_exp
+    , created_at : OptionalArgument Timestamptz_comparison_exp
+    , deleted : OptionalArgument Boolean_comparison_exp
+    , icon : OptionalArgument String_comparison_exp
+    , id : OptionalArgument Uuid_comparison_exp
+    , name : OptionalArgument String_comparison_exp
+    , type_ : OptionalArgument String_comparison_exp
+    , updated_at : OptionalArgument Timestamptz_comparison_exp
+    , user_id : OptionalArgument String_comparison_exp
+    }
+
+
+{-| Type alias for the `Categories_bool_exp` attributes. Note that this type
+needs to use the `Categories_bool_exp` type (not just a plain type alias) because it has
+references to itself either directly (recursive) or indirectly (circular). See
+<https://github.com/dillonkearns/elm-graphql/issues/33>.
+-}
+type alias Categories_bool_expRaw =
+    { and_ : OptionalArgument (List Categories_bool_exp)
+    , not_ : OptionalArgument Categories_bool_exp
+    , or_ : OptionalArgument (List Categories_bool_exp)
+    , account : OptionalArgument Uuid_comparison_exp
+    , created_at : OptionalArgument Timestamptz_comparison_exp
+    , deleted : OptionalArgument Boolean_comparison_exp
+    , icon : OptionalArgument String_comparison_exp
+    , id : OptionalArgument Uuid_comparison_exp
+    , name : OptionalArgument String_comparison_exp
+    , type_ : OptionalArgument String_comparison_exp
+    , updated_at : OptionalArgument Timestamptz_comparison_exp
+    , user_id : OptionalArgument String_comparison_exp
+    }
+
+
+{-| Type for the Categories\_bool\_exp input object.
+-}
+type Categories_bool_exp
+    = Categories_bool_exp Categories_bool_expRaw
+
+
+{-| Encode a Categories\_bool\_exp into a value that can be used as an argument.
+-}
+encodeCategories_bool_exp : Categories_bool_exp -> Value
+encodeCategories_bool_exp (Categories_bool_exp input____) =
+    Encode.maybeObject
+        [ ( "_and", (encodeCategories_bool_exp |> Encode.list) |> Encode.optional input____.and_ ), ( "_not", encodeCategories_bool_exp |> Encode.optional input____.not_ ), ( "_or", (encodeCategories_bool_exp |> Encode.list) |> Encode.optional input____.or_ ), ( "account", encodeUuid_comparison_exp |> Encode.optional input____.account ), ( "created_at", encodeTimestamptz_comparison_exp |> Encode.optional input____.created_at ), ( "deleted", encodeBoolean_comparison_exp |> Encode.optional input____.deleted ), ( "icon", encodeString_comparison_exp |> Encode.optional input____.icon ), ( "id", encodeUuid_comparison_exp |> Encode.optional input____.id ), ( "name", encodeString_comparison_exp |> Encode.optional input____.name ), ( "type", encodeString_comparison_exp |> Encode.optional input____.type_ ), ( "updated_at", encodeTimestamptz_comparison_exp |> Encode.optional input____.updated_at ), ( "user_id", encodeString_comparison_exp |> Encode.optional input____.user_id ) ]
+
+
+buildCategories_insert_input :
+    (Categories_insert_inputOptionalFields -> Categories_insert_inputOptionalFields)
+    -> Categories_insert_input
+buildCategories_insert_input fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { account = Absent, created_at = Absent, deleted = Absent, icon = Absent, id = Absent, name = Absent, type_ = Absent, updated_at = Absent, user_id = Absent }
+    in
+    { account = optionals____.account, created_at = optionals____.created_at, deleted = optionals____.deleted, icon = optionals____.icon, id = optionals____.id, name = optionals____.name, type_ = optionals____.type_, updated_at = optionals____.updated_at, user_id = optionals____.user_id }
+
+
+type alias Categories_insert_inputOptionalFields =
+    { account : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , created_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , deleted : OptionalArgument Bool
+    , icon : OptionalArgument String
+    , id : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , name : OptionalArgument String
+    , type_ : OptionalArgument String
+    , updated_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , user_id : OptionalArgument String
+    }
+
+
+{-| Type for the Categories\_insert\_input input object.
+-}
+type alias Categories_insert_input =
+    { account : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , created_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , deleted : OptionalArgument Bool
+    , icon : OptionalArgument String
+    , id : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , name : OptionalArgument String
+    , type_ : OptionalArgument String
+    , updated_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , user_id : OptionalArgument String
+    }
+
+
+{-| Encode a Categories\_insert\_input into a value that can be used as an argument.
+-}
+encodeCategories_insert_input : Categories_insert_input -> Value
+encodeCategories_insert_input input____ =
+    Encode.maybeObject
+        [ ( "account", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.account ), ( "created_at", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.created_at ), ( "deleted", Encode.bool |> Encode.optional input____.deleted ), ( "icon", Encode.string |> Encode.optional input____.icon ), ( "id", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.id ), ( "name", Encode.string |> Encode.optional input____.name ), ( "type", Encode.string |> Encode.optional input____.type_ ), ( "updated_at", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.updated_at ), ( "user_id", Encode.string |> Encode.optional input____.user_id ) ]
+
+
+buildCategories_obj_rel_insert_input :
+    Categories_obj_rel_insert_inputRequiredFields
+    -> (Categories_obj_rel_insert_inputOptionalFields -> Categories_obj_rel_insert_inputOptionalFields)
+    -> Categories_obj_rel_insert_input
+buildCategories_obj_rel_insert_input required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { on_conflict = Absent }
+    in
+    Categories_obj_rel_insert_input { data = required____.data, on_conflict = optionals____.on_conflict }
+
+
+type alias Categories_obj_rel_insert_inputRequiredFields =
+    { data : Categories_insert_input }
+
+
+type alias Categories_obj_rel_insert_inputOptionalFields =
+    { on_conflict : OptionalArgument Categories_on_conflict }
+
+
+{-| Type alias for the `Categories_obj_rel_insert_input` attributes. Note that this type
+needs to use the `Categories_obj_rel_insert_input` type (not just a plain type alias) because it has
+references to itself either directly (recursive) or indirectly (circular). See
+<https://github.com/dillonkearns/elm-graphql/issues/33>.
+-}
+type alias Categories_obj_rel_insert_inputRaw =
+    { data : Categories_insert_input
+    , on_conflict : OptionalArgument Categories_on_conflict
+    }
+
+
+{-| Type for the Categories\_obj\_rel\_insert\_input input object.
+-}
+type Categories_obj_rel_insert_input
+    = Categories_obj_rel_insert_input Categories_obj_rel_insert_inputRaw
+
+
+{-| Encode a Categories\_obj\_rel\_insert\_input into a value that can be used as an argument.
+-}
+encodeCategories_obj_rel_insert_input : Categories_obj_rel_insert_input -> Value
+encodeCategories_obj_rel_insert_input (Categories_obj_rel_insert_input input____) =
+    Encode.maybeObject
+        [ ( "data", encodeCategories_insert_input input____.data |> Just ), ( "on_conflict", encodeCategories_on_conflict |> Encode.optional input____.on_conflict ) ]
+
+
+buildCategories_on_conflict :
+    Categories_on_conflictRequiredFields
+    -> (Categories_on_conflictOptionalFields -> Categories_on_conflictOptionalFields)
+    -> Categories_on_conflict
+buildCategories_on_conflict required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { where_ = Absent }
+    in
+    Categories_on_conflict { constraint = required____.constraint, update_columns = required____.update_columns, where_ = optionals____.where_ }
+
+
+type alias Categories_on_conflictRequiredFields =
+    { constraint : MonisApp.Enum.Categories_constraint.Categories_constraint
+    , update_columns : List MonisApp.Enum.Categories_update_column.Categories_update_column
+    }
+
+
+type alias Categories_on_conflictOptionalFields =
+    { where_ : OptionalArgument Categories_bool_exp }
+
+
+{-| Type alias for the `Categories_on_conflict` attributes. Note that this type
+needs to use the `Categories_on_conflict` type (not just a plain type alias) because it has
+references to itself either directly (recursive) or indirectly (circular). See
+<https://github.com/dillonkearns/elm-graphql/issues/33>.
+-}
+type alias Categories_on_conflictRaw =
+    { constraint : MonisApp.Enum.Categories_constraint.Categories_constraint
+    , update_columns : List MonisApp.Enum.Categories_update_column.Categories_update_column
+    , where_ : OptionalArgument Categories_bool_exp
+    }
+
+
+{-| Type for the Categories\_on\_conflict input object.
+-}
+type Categories_on_conflict
+    = Categories_on_conflict Categories_on_conflictRaw
+
+
+{-| Encode a Categories\_on\_conflict into a value that can be used as an argument.
+-}
+encodeCategories_on_conflict : Categories_on_conflict -> Value
+encodeCategories_on_conflict (Categories_on_conflict input____) =
+    Encode.maybeObject
+        [ ( "constraint", Encode.enum MonisApp.Enum.Categories_constraint.toString input____.constraint |> Just ), ( "update_columns", (Encode.enum MonisApp.Enum.Categories_update_column.toString |> Encode.list) input____.update_columns |> Just ), ( "where", encodeCategories_bool_exp |> Encode.optional input____.where_ ) ]
+
+
+buildCategories_order_by :
+    (Categories_order_byOptionalFields -> Categories_order_byOptionalFields)
+    -> Categories_order_by
+buildCategories_order_by fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { account = Absent, created_at = Absent, deleted = Absent, icon = Absent, id = Absent, name = Absent, type_ = Absent, updated_at = Absent, user_id = Absent }
+    in
+    { account = optionals____.account, created_at = optionals____.created_at, deleted = optionals____.deleted, icon = optionals____.icon, id = optionals____.id, name = optionals____.name, type_ = optionals____.type_, updated_at = optionals____.updated_at, user_id = optionals____.user_id }
+
+
+type alias Categories_order_byOptionalFields =
+    { account : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , created_at : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , deleted : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , icon : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , id : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , name : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , type_ : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , updated_at : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , user_id : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    }
+
+
+{-| Type for the Categories\_order\_by input object.
+-}
+type alias Categories_order_by =
+    { account : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , created_at : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , deleted : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , icon : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , id : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , name : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , type_ : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , updated_at : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , user_id : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    }
+
+
+{-| Encode a Categories\_order\_by into a value that can be used as an argument.
+-}
+encodeCategories_order_by : Categories_order_by -> Value
+encodeCategories_order_by input____ =
+    Encode.maybeObject
+        [ ( "account", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.account ), ( "created_at", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.created_at ), ( "deleted", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.deleted ), ( "icon", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.icon ), ( "id", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.id ), ( "name", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.name ), ( "type", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.type_ ), ( "updated_at", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.updated_at ), ( "user_id", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.user_id ) ]
+
+
+buildCategories_pk_columns_input :
+    Categories_pk_columns_inputRequiredFields
+    -> Categories_pk_columns_input
+buildCategories_pk_columns_input required____ =
+    { id = required____.id }
+
+
+type alias Categories_pk_columns_inputRequiredFields =
+    { id : MonisApp.ScalarCodecs.Uuid }
+
+
+{-| Type for the Categories\_pk\_columns\_input input object.
+-}
+type alias Categories_pk_columns_input =
+    { id : MonisApp.ScalarCodecs.Uuid }
+
+
+{-| Encode a Categories\_pk\_columns\_input into a value that can be used as an argument.
+-}
+encodeCategories_pk_columns_input : Categories_pk_columns_input -> Value
+encodeCategories_pk_columns_input input____ =
+    Encode.maybeObject
+        [ ( "id", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) input____.id |> Just ) ]
+
+
+buildCategories_set_input :
+    (Categories_set_inputOptionalFields -> Categories_set_inputOptionalFields)
+    -> Categories_set_input
+buildCategories_set_input fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { account = Absent, created_at = Absent, deleted = Absent, icon = Absent, id = Absent, name = Absent, type_ = Absent, updated_at = Absent, user_id = Absent }
+    in
+    { account = optionals____.account, created_at = optionals____.created_at, deleted = optionals____.deleted, icon = optionals____.icon, id = optionals____.id, name = optionals____.name, type_ = optionals____.type_, updated_at = optionals____.updated_at, user_id = optionals____.user_id }
+
+
+type alias Categories_set_inputOptionalFields =
+    { account : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , created_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , deleted : OptionalArgument Bool
+    , icon : OptionalArgument String
+    , id : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , name : OptionalArgument String
+    , type_ : OptionalArgument String
+    , updated_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , user_id : OptionalArgument String
+    }
+
+
+{-| Type for the Categories\_set\_input input object.
+-}
+type alias Categories_set_input =
+    { account : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , created_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , deleted : OptionalArgument Bool
+    , icon : OptionalArgument String
+    , id : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , name : OptionalArgument String
+    , type_ : OptionalArgument String
+    , updated_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , user_id : OptionalArgument String
+    }
+
+
+{-| Encode a Categories\_set\_input into a value that can be used as an argument.
+-}
+encodeCategories_set_input : Categories_set_input -> Value
+encodeCategories_set_input input____ =
+    Encode.maybeObject
+        [ ( "account", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.account ), ( "created_at", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.created_at ), ( "deleted", Encode.bool |> Encode.optional input____.deleted ), ( "icon", Encode.string |> Encode.optional input____.icon ), ( "id", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.id ), ( "name", Encode.string |> Encode.optional input____.name ), ( "type", Encode.string |> Encode.optional input____.type_ ), ( "updated_at", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.updated_at ), ( "user_id", Encode.string |> Encode.optional input____.user_id ) ]
+
+
+buildInt_cast_exp :
+    (Int_cast_expOptionalFields -> Int_cast_expOptionalFields)
+    -> Int_cast_exp
+buildInt_cast_exp fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { string = Absent }
+    in
+    { string = optionals____.string }
+
+
+type alias Int_cast_expOptionalFields =
+    { string : OptionalArgument String_comparison_exp }
+
+
+{-| Type for the Int\_cast\_exp input object.
+-}
+type alias Int_cast_exp =
+    { string : OptionalArgument String_comparison_exp }
+
+
+{-| Encode a Int\_cast\_exp into a value that can be used as an argument.
+-}
+encodeInt_cast_exp : Int_cast_exp -> Value
+encodeInt_cast_exp input____ =
+    Encode.maybeObject
+        [ ( "String", encodeString_comparison_exp |> Encode.optional input____.string ) ]
+
+
+buildInt_comparison_exp :
+    (Int_comparison_expOptionalFields -> Int_comparison_expOptionalFields)
+    -> Int_comparison_exp
+buildInt_comparison_exp fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { cast_ = Absent, eq_ = Absent, gt_ = Absent, gte_ = Absent, in_ = Absent, is_null_ = Absent, lt_ = Absent, lte_ = Absent, neq_ = Absent, nin_ = Absent }
+    in
+    { cast_ = optionals____.cast_, eq_ = optionals____.eq_, gt_ = optionals____.gt_, gte_ = optionals____.gte_, in_ = optionals____.in_, is_null_ = optionals____.is_null_, lt_ = optionals____.lt_, lte_ = optionals____.lte_, neq_ = optionals____.neq_, nin_ = optionals____.nin_ }
+
+
+type alias Int_comparison_expOptionalFields =
+    { cast_ : OptionalArgument Int_cast_exp
+    , eq_ : OptionalArgument Int
+    , gt_ : OptionalArgument Int
+    , gte_ : OptionalArgument Int
+    , in_ : OptionalArgument (List Int)
+    , is_null_ : OptionalArgument Bool
+    , lt_ : OptionalArgument Int
+    , lte_ : OptionalArgument Int
+    , neq_ : OptionalArgument Int
+    , nin_ : OptionalArgument (List Int)
+    }
+
+
+{-| Type for the Int\_comparison\_exp input object.
+-}
+type alias Int_comparison_exp =
+    { cast_ : OptionalArgument Int_cast_exp
+    , eq_ : OptionalArgument Int
+    , gt_ : OptionalArgument Int
+    , gte_ : OptionalArgument Int
+    , in_ : OptionalArgument (List Int)
+    , is_null_ : OptionalArgument Bool
+    , lt_ : OptionalArgument Int
+    , lte_ : OptionalArgument Int
+    , neq_ : OptionalArgument Int
+    , nin_ : OptionalArgument (List Int)
+    }
+
+
+{-| Encode a Int\_comparison\_exp into a value that can be used as an argument.
+-}
+encodeInt_comparison_exp : Int_comparison_exp -> Value
+encodeInt_comparison_exp input____ =
+    Encode.maybeObject
+        [ ( "_cast", encodeInt_cast_exp |> Encode.optional input____.cast_ ), ( "_eq", Encode.int |> Encode.optional input____.eq_ ), ( "_gt", Encode.int |> Encode.optional input____.gt_ ), ( "_gte", Encode.int |> Encode.optional input____.gte_ ), ( "_in", (Encode.int |> Encode.list) |> Encode.optional input____.in_ ), ( "_is_null", Encode.bool |> Encode.optional input____.is_null_ ), ( "_lt", Encode.int |> Encode.optional input____.lt_ ), ( "_lte", Encode.int |> Encode.optional input____.lte_ ), ( "_neq", Encode.int |> Encode.optional input____.neq_ ), ( "_nin", (Encode.int |> Encode.list) |> Encode.optional input____.nin_ ) ]
+
+
+buildString_comparison_exp :
+    (String_comparison_expOptionalFields -> String_comparison_expOptionalFields)
+    -> String_comparison_exp
+buildString_comparison_exp fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { eq_ = Absent, gt_ = Absent, gte_ = Absent, ilike_ = Absent, in_ = Absent, iregex_ = Absent, is_null_ = Absent, like_ = Absent, lt_ = Absent, lte_ = Absent, neq_ = Absent, nilike_ = Absent, nin_ = Absent, niregex_ = Absent, nlike_ = Absent, nregex_ = Absent, nsimilar_ = Absent, regex_ = Absent, similar_ = Absent }
+    in
+    { eq_ = optionals____.eq_, gt_ = optionals____.gt_, gte_ = optionals____.gte_, ilike_ = optionals____.ilike_, in_ = optionals____.in_, iregex_ = optionals____.iregex_, is_null_ = optionals____.is_null_, like_ = optionals____.like_, lt_ = optionals____.lt_, lte_ = optionals____.lte_, neq_ = optionals____.neq_, nilike_ = optionals____.nilike_, nin_ = optionals____.nin_, niregex_ = optionals____.niregex_, nlike_ = optionals____.nlike_, nregex_ = optionals____.nregex_, nsimilar_ = optionals____.nsimilar_, regex_ = optionals____.regex_, similar_ = optionals____.similar_ }
+
+
+type alias String_comparison_expOptionalFields =
+    { eq_ : OptionalArgument String
+    , gt_ : OptionalArgument String
+    , gte_ : OptionalArgument String
+    , ilike_ : OptionalArgument String
+    , in_ : OptionalArgument (List String)
+    , iregex_ : OptionalArgument String
+    , is_null_ : OptionalArgument Bool
+    , like_ : OptionalArgument String
+    , lt_ : OptionalArgument String
+    , lte_ : OptionalArgument String
+    , neq_ : OptionalArgument String
+    , nilike_ : OptionalArgument String
+    , nin_ : OptionalArgument (List String)
+    , niregex_ : OptionalArgument String
+    , nlike_ : OptionalArgument String
+    , nregex_ : OptionalArgument String
+    , nsimilar_ : OptionalArgument String
+    , regex_ : OptionalArgument String
+    , similar_ : OptionalArgument String
+    }
+
+
+{-| Type for the String\_comparison\_exp input object.
+-}
+type alias String_comparison_exp =
+    { eq_ : OptionalArgument String
+    , gt_ : OptionalArgument String
+    , gte_ : OptionalArgument String
+    , ilike_ : OptionalArgument String
+    , in_ : OptionalArgument (List String)
+    , iregex_ : OptionalArgument String
+    , is_null_ : OptionalArgument Bool
+    , like_ : OptionalArgument String
+    , lt_ : OptionalArgument String
+    , lte_ : OptionalArgument String
+    , neq_ : OptionalArgument String
+    , nilike_ : OptionalArgument String
+    , nin_ : OptionalArgument (List String)
+    , niregex_ : OptionalArgument String
+    , nlike_ : OptionalArgument String
+    , nregex_ : OptionalArgument String
+    , nsimilar_ : OptionalArgument String
+    , regex_ : OptionalArgument String
+    , similar_ : OptionalArgument String
+    }
+
+
+{-| Encode a String\_comparison\_exp into a value that can be used as an argument.
+-}
+encodeString_comparison_exp : String_comparison_exp -> Value
+encodeString_comparison_exp input____ =
+    Encode.maybeObject
+        [ ( "_eq", Encode.string |> Encode.optional input____.eq_ ), ( "_gt", Encode.string |> Encode.optional input____.gt_ ), ( "_gte", Encode.string |> Encode.optional input____.gte_ ), ( "_ilike", Encode.string |> Encode.optional input____.ilike_ ), ( "_in", (Encode.string |> Encode.list) |> Encode.optional input____.in_ ), ( "_iregex", Encode.string |> Encode.optional input____.iregex_ ), ( "_is_null", Encode.bool |> Encode.optional input____.is_null_ ), ( "_like", Encode.string |> Encode.optional input____.like_ ), ( "_lt", Encode.string |> Encode.optional input____.lt_ ), ( "_lte", Encode.string |> Encode.optional input____.lte_ ), ( "_neq", Encode.string |> Encode.optional input____.neq_ ), ( "_nilike", Encode.string |> Encode.optional input____.nilike_ ), ( "_nin", (Encode.string |> Encode.list) |> Encode.optional input____.nin_ ), ( "_niregex", Encode.string |> Encode.optional input____.niregex_ ), ( "_nlike", Encode.string |> Encode.optional input____.nlike_ ), ( "_nregex", Encode.string |> Encode.optional input____.nregex_ ), ( "_nsimilar", Encode.string |> Encode.optional input____.nsimilar_ ), ( "_regex", Encode.string |> Encode.optional input____.regex_ ), ( "_similar", Encode.string |> Encode.optional input____.similar_ ) ]
+
+
+buildTimestamptz_cast_exp :
+    (Timestamptz_cast_expOptionalFields -> Timestamptz_cast_expOptionalFields)
+    -> Timestamptz_cast_exp
+buildTimestamptz_cast_exp fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { string = Absent }
+    in
+    { string = optionals____.string }
+
+
+type alias Timestamptz_cast_expOptionalFields =
+    { string : OptionalArgument String_comparison_exp }
+
+
+{-| Type for the Timestamptz\_cast\_exp input object.
+-}
+type alias Timestamptz_cast_exp =
+    { string : OptionalArgument String_comparison_exp }
+
+
+{-| Encode a Timestamptz\_cast\_exp into a value that can be used as an argument.
+-}
+encodeTimestamptz_cast_exp : Timestamptz_cast_exp -> Value
+encodeTimestamptz_cast_exp input____ =
+    Encode.maybeObject
+        [ ( "String", encodeString_comparison_exp |> Encode.optional input____.string ) ]
+
+
+buildTimestamptz_comparison_exp :
+    (Timestamptz_comparison_expOptionalFields -> Timestamptz_comparison_expOptionalFields)
+    -> Timestamptz_comparison_exp
+buildTimestamptz_comparison_exp fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { cast_ = Absent, eq_ = Absent, gt_ = Absent, gte_ = Absent, in_ = Absent, is_null_ = Absent, lt_ = Absent, lte_ = Absent, neq_ = Absent, nin_ = Absent }
+    in
+    { cast_ = optionals____.cast_, eq_ = optionals____.eq_, gt_ = optionals____.gt_, gte_ = optionals____.gte_, in_ = optionals____.in_, is_null_ = optionals____.is_null_, lt_ = optionals____.lt_, lte_ = optionals____.lte_, neq_ = optionals____.neq_, nin_ = optionals____.nin_ }
+
+
+type alias Timestamptz_comparison_expOptionalFields =
+    { cast_ : OptionalArgument Timestamptz_cast_exp
+    , eq_ : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , gt_ : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , gte_ : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , in_ : OptionalArgument (List MonisApp.ScalarCodecs.Timestamptz)
+    , is_null_ : OptionalArgument Bool
+    , lt_ : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , lte_ : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , neq_ : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , nin_ : OptionalArgument (List MonisApp.ScalarCodecs.Timestamptz)
+    }
+
+
+{-| Type for the Timestamptz\_comparison\_exp input object.
+-}
+type alias Timestamptz_comparison_exp =
+    { cast_ : OptionalArgument Timestamptz_cast_exp
+    , eq_ : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , gt_ : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , gte_ : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , in_ : OptionalArgument (List MonisApp.ScalarCodecs.Timestamptz)
+    , is_null_ : OptionalArgument Bool
+    , lt_ : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , lte_ : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , neq_ : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , nin_ : OptionalArgument (List MonisApp.ScalarCodecs.Timestamptz)
+    }
+
+
+{-| Encode a Timestamptz\_comparison\_exp into a value that can be used as an argument.
+-}
+encodeTimestamptz_comparison_exp : Timestamptz_comparison_exp -> Value
+encodeTimestamptz_comparison_exp input____ =
+    Encode.maybeObject
+        [ ( "_cast", encodeTimestamptz_cast_exp |> Encode.optional input____.cast_ ), ( "_eq", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.eq_ ), ( "_gt", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.gt_ ), ( "_gte", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.gte_ ), ( "_in", ((MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.list) |> Encode.optional input____.in_ ), ( "_is_null", Encode.bool |> Encode.optional input____.is_null_ ), ( "_lt", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.lt_ ), ( "_lte", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.lte_ ), ( "_neq", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.neq_ ), ( "_nin", ((MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.list) |> Encode.optional input____.nin_ ) ]
+
+
+buildTransactions_bool_exp :
+    (Transactions_bool_expOptionalFields -> Transactions_bool_expOptionalFields)
+    -> Transactions_bool_exp
+buildTransactions_bool_exp fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { and_ = Absent, not_ = Absent, or_ = Absent, account = Absent, account_id = Absent, amount = Absent, category = Absent, category_id = Absent, comment = Absent, created_at = Absent, date = Absent, deleted = Absent, id = Absent, operation = Absent, payee = Absent, updated_at = Absent, user = Absent, user_id = Absent }
+    in
+    Transactions_bool_exp { and_ = optionals____.and_, not_ = optionals____.not_, or_ = optionals____.or_, account = optionals____.account, account_id = optionals____.account_id, amount = optionals____.amount, category = optionals____.category, category_id = optionals____.category_id, comment = optionals____.comment, created_at = optionals____.created_at, date = optionals____.date, deleted = optionals____.deleted, id = optionals____.id, operation = optionals____.operation, payee = optionals____.payee, updated_at = optionals____.updated_at, user = optionals____.user, user_id = optionals____.user_id }
+
+
+type alias Transactions_bool_expOptionalFields =
+    { and_ : OptionalArgument (List Transactions_bool_exp)
+    , not_ : OptionalArgument Transactions_bool_exp
+    , or_ : OptionalArgument (List Transactions_bool_exp)
+    , account : OptionalArgument Accounts_bool_exp
+    , account_id : OptionalArgument Uuid_comparison_exp
+    , amount : OptionalArgument Int_comparison_exp
+    , category : OptionalArgument Categories_bool_exp
+    , category_id : OptionalArgument Uuid_comparison_exp
+    , comment : OptionalArgument String_comparison_exp
+    , created_at : OptionalArgument Timestamptz_comparison_exp
+    , date : OptionalArgument Timestamptz_comparison_exp
+    , deleted : OptionalArgument Boolean_comparison_exp
+    , id : OptionalArgument Uuid_comparison_exp
+    , operation : OptionalArgument String_comparison_exp
+    , payee : OptionalArgument String_comparison_exp
+    , updated_at : OptionalArgument Timestamptz_comparison_exp
+    , user : OptionalArgument Users_bool_exp
+    , user_id : OptionalArgument String_comparison_exp
+    }
+
+
+{-| Type alias for the `Transactions_bool_exp` attributes. Note that this type
+needs to use the `Transactions_bool_exp` type (not just a plain type alias) because it has
+references to itself either directly (recursive) or indirectly (circular). See
+<https://github.com/dillonkearns/elm-graphql/issues/33>.
+-}
+type alias Transactions_bool_expRaw =
+    { and_ : OptionalArgument (List Transactions_bool_exp)
+    , not_ : OptionalArgument Transactions_bool_exp
+    , or_ : OptionalArgument (List Transactions_bool_exp)
+    , account : OptionalArgument Accounts_bool_exp
+    , account_id : OptionalArgument Uuid_comparison_exp
+    , amount : OptionalArgument Int_comparison_exp
+    , category : OptionalArgument Categories_bool_exp
+    , category_id : OptionalArgument Uuid_comparison_exp
+    , comment : OptionalArgument String_comparison_exp
+    , created_at : OptionalArgument Timestamptz_comparison_exp
+    , date : OptionalArgument Timestamptz_comparison_exp
+    , deleted : OptionalArgument Boolean_comparison_exp
+    , id : OptionalArgument Uuid_comparison_exp
+    , operation : OptionalArgument String_comparison_exp
+    , payee : OptionalArgument String_comparison_exp
+    , updated_at : OptionalArgument Timestamptz_comparison_exp
+    , user : OptionalArgument Users_bool_exp
+    , user_id : OptionalArgument String_comparison_exp
+    }
+
+
+{-| Type for the Transactions\_bool\_exp input object.
+-}
+type Transactions_bool_exp
+    = Transactions_bool_exp Transactions_bool_expRaw
+
+
+{-| Encode a Transactions\_bool\_exp into a value that can be used as an argument.
+-}
+encodeTransactions_bool_exp : Transactions_bool_exp -> Value
+encodeTransactions_bool_exp (Transactions_bool_exp input____) =
+    Encode.maybeObject
+        [ ( "_and", (encodeTransactions_bool_exp |> Encode.list) |> Encode.optional input____.and_ ), ( "_not", encodeTransactions_bool_exp |> Encode.optional input____.not_ ), ( "_or", (encodeTransactions_bool_exp |> Encode.list) |> Encode.optional input____.or_ ), ( "account", encodeAccounts_bool_exp |> Encode.optional input____.account ), ( "account_id", encodeUuid_comparison_exp |> Encode.optional input____.account_id ), ( "amount", encodeInt_comparison_exp |> Encode.optional input____.amount ), ( "category", encodeCategories_bool_exp |> Encode.optional input____.category ), ( "category_id", encodeUuid_comparison_exp |> Encode.optional input____.category_id ), ( "comment", encodeString_comparison_exp |> Encode.optional input____.comment ), ( "created_at", encodeTimestamptz_comparison_exp |> Encode.optional input____.created_at ), ( "date", encodeTimestamptz_comparison_exp |> Encode.optional input____.date ), ( "deleted", encodeBoolean_comparison_exp |> Encode.optional input____.deleted ), ( "id", encodeUuid_comparison_exp |> Encode.optional input____.id ), ( "operation", encodeString_comparison_exp |> Encode.optional input____.operation ), ( "payee", encodeString_comparison_exp |> Encode.optional input____.payee ), ( "updated_at", encodeTimestamptz_comparison_exp |> Encode.optional input____.updated_at ), ( "user", encodeUsers_bool_exp |> Encode.optional input____.user ), ( "user_id", encodeString_comparison_exp |> Encode.optional input____.user_id ) ]
+
+
+buildTransactions_inc_input :
+    (Transactions_inc_inputOptionalFields -> Transactions_inc_inputOptionalFields)
+    -> Transactions_inc_input
+buildTransactions_inc_input fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { amount = Absent }
+    in
+    { amount = optionals____.amount }
+
+
+type alias Transactions_inc_inputOptionalFields =
+    { amount : OptionalArgument Int }
+
+
+{-| Type for the Transactions\_inc\_input input object.
+-}
+type alias Transactions_inc_input =
+    { amount : OptionalArgument Int }
+
+
+{-| Encode a Transactions\_inc\_input into a value that can be used as an argument.
+-}
+encodeTransactions_inc_input : Transactions_inc_input -> Value
+encodeTransactions_inc_input input____ =
+    Encode.maybeObject
+        [ ( "amount", Encode.int |> Encode.optional input____.amount ) ]
+
+
+buildTransactions_insert_input :
+    (Transactions_insert_inputOptionalFields -> Transactions_insert_inputOptionalFields)
+    -> Transactions_insert_input
+buildTransactions_insert_input fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { account = Absent, account_id = Absent, amount = Absent, category = Absent, category_id = Absent, comment = Absent, created_at = Absent, date = Absent, deleted = Absent, id = Absent, operation = Absent, payee = Absent, updated_at = Absent, user = Absent, user_id = Absent }
+    in
+    Transactions_insert_input { account = optionals____.account, account_id = optionals____.account_id, amount = optionals____.amount, category = optionals____.category, category_id = optionals____.category_id, comment = optionals____.comment, created_at = optionals____.created_at, date = optionals____.date, deleted = optionals____.deleted, id = optionals____.id, operation = optionals____.operation, payee = optionals____.payee, updated_at = optionals____.updated_at, user = optionals____.user, user_id = optionals____.user_id }
+
+
+type alias Transactions_insert_inputOptionalFields =
+    { account : OptionalArgument Accounts_obj_rel_insert_input
+    , account_id : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , amount : OptionalArgument Int
+    , category : OptionalArgument Categories_obj_rel_insert_input
+    , category_id : OptionalArgument MonisApp.ScalarCodecs.Uuid
     , comment : OptionalArgument String
-    , payee : String
-    , transactionDate : String
-    , value : String
+    , created_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , date : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , deleted : OptionalArgument Bool
+    , id : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , operation : OptionalArgument String
+    , payee : OptionalArgument String
+    , updated_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , user : OptionalArgument Users_obj_rel_insert_input
+    , user_id : OptionalArgument String
     }
 
 
-{-| Encode a CreateTransactionInput into a value that can be used as an argument.
+{-| Type alias for the `Transactions_insert_input` attributes. Note that this type
+needs to use the `Transactions_insert_input` type (not just a plain type alias) because it has
+references to itself either directly (recursive) or indirectly (circular). See
+<https://github.com/dillonkearns/elm-graphql/issues/33>.
 -}
-encodeCreateTransactionInput : CreateTransactionInput -> Value
-encodeCreateTransactionInput input =
+type alias Transactions_insert_inputRaw =
+    { account : OptionalArgument Accounts_obj_rel_insert_input
+    , account_id : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , amount : OptionalArgument Int
+    , category : OptionalArgument Categories_obj_rel_insert_input
+    , category_id : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , comment : OptionalArgument String
+    , created_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , date : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , deleted : OptionalArgument Bool
+    , id : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , operation : OptionalArgument String
+    , payee : OptionalArgument String
+    , updated_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , user : OptionalArgument Users_obj_rel_insert_input
+    , user_id : OptionalArgument String
+    }
+
+
+{-| Type for the Transactions\_insert\_input input object.
+-}
+type Transactions_insert_input
+    = Transactions_insert_input Transactions_insert_inputRaw
+
+
+{-| Encode a Transactions\_insert\_input into a value that can be used as an argument.
+-}
+encodeTransactions_insert_input : Transactions_insert_input -> Value
+encodeTransactions_insert_input (Transactions_insert_input input____) =
     Encode.maybeObject
-        [ ( "accountId", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecId) input.accountId |> Just ), ( "categoryId", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecId) input.categoryId |> Just ), ( "comment", Encode.string |> Encode.optional input.comment ), ( "payee", Encode.string input.payee |> Just ), ( "transactionDate", Encode.string input.transactionDate |> Just ), ( "value", Encode.string input.value |> Just ) ]
+        [ ( "account", encodeAccounts_obj_rel_insert_input |> Encode.optional input____.account ), ( "account_id", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.account_id ), ( "amount", Encode.int |> Encode.optional input____.amount ), ( "category", encodeCategories_obj_rel_insert_input |> Encode.optional input____.category ), ( "category_id", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.category_id ), ( "comment", Encode.string |> Encode.optional input____.comment ), ( "created_at", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.created_at ), ( "date", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.date ), ( "deleted", Encode.bool |> Encode.optional input____.deleted ), ( "id", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.id ), ( "operation", Encode.string |> Encode.optional input____.operation ), ( "payee", Encode.string |> Encode.optional input____.payee ), ( "updated_at", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.updated_at ), ( "user", encodeUsers_obj_rel_insert_input |> Encode.optional input____.user ), ( "user_id", Encode.string |> Encode.optional input____.user_id ) ]
 
 
-buildDeleteAccountInput :
-    DeleteAccountInputRequiredFields
-    -> DeleteAccountInput
-buildDeleteAccountInput required =
-    { id = required.id }
+buildTransactions_on_conflict :
+    Transactions_on_conflictRequiredFields
+    -> (Transactions_on_conflictOptionalFields -> Transactions_on_conflictOptionalFields)
+    -> Transactions_on_conflict
+buildTransactions_on_conflict required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { where_ = Absent }
+    in
+    Transactions_on_conflict { constraint = required____.constraint, update_columns = required____.update_columns, where_ = optionals____.where_ }
 
 
-type alias DeleteAccountInputRequiredFields =
+type alias Transactions_on_conflictRequiredFields =
+    { constraint : MonisApp.Enum.Transactions_constraint.Transactions_constraint
+    , update_columns : List MonisApp.Enum.Transactions_update_column.Transactions_update_column
+    }
+
+
+type alias Transactions_on_conflictOptionalFields =
+    { where_ : OptionalArgument Transactions_bool_exp }
+
+
+{-| Type alias for the `Transactions_on_conflict` attributes. Note that this type
+needs to use the `Transactions_on_conflict` type (not just a plain type alias) because it has
+references to itself either directly (recursive) or indirectly (circular). See
+<https://github.com/dillonkearns/elm-graphql/issues/33>.
+-}
+type alias Transactions_on_conflictRaw =
+    { constraint : MonisApp.Enum.Transactions_constraint.Transactions_constraint
+    , update_columns : List MonisApp.Enum.Transactions_update_column.Transactions_update_column
+    , where_ : OptionalArgument Transactions_bool_exp
+    }
+
+
+{-| Type for the Transactions\_on\_conflict input object.
+-}
+type Transactions_on_conflict
+    = Transactions_on_conflict Transactions_on_conflictRaw
+
+
+{-| Encode a Transactions\_on\_conflict into a value that can be used as an argument.
+-}
+encodeTransactions_on_conflict : Transactions_on_conflict -> Value
+encodeTransactions_on_conflict (Transactions_on_conflict input____) =
+    Encode.maybeObject
+        [ ( "constraint", Encode.enum MonisApp.Enum.Transactions_constraint.toString input____.constraint |> Just ), ( "update_columns", (Encode.enum MonisApp.Enum.Transactions_update_column.toString |> Encode.list) input____.update_columns |> Just ), ( "where", encodeTransactions_bool_exp |> Encode.optional input____.where_ ) ]
+
+
+buildTransactions_order_by :
+    (Transactions_order_byOptionalFields -> Transactions_order_byOptionalFields)
+    -> Transactions_order_by
+buildTransactions_order_by fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { account = Absent, account_id = Absent, amount = Absent, category = Absent, category_id = Absent, comment = Absent, created_at = Absent, date = Absent, deleted = Absent, id = Absent, operation = Absent, payee = Absent, updated_at = Absent, user = Absent, user_id = Absent }
+    in
+    { account = optionals____.account, account_id = optionals____.account_id, amount = optionals____.amount, category = optionals____.category, category_id = optionals____.category_id, comment = optionals____.comment, created_at = optionals____.created_at, date = optionals____.date, deleted = optionals____.deleted, id = optionals____.id, operation = optionals____.operation, payee = optionals____.payee, updated_at = optionals____.updated_at, user = optionals____.user, user_id = optionals____.user_id }
+
+
+type alias Transactions_order_byOptionalFields =
+    { account : OptionalArgument Accounts_order_by
+    , account_id : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , amount : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , category : OptionalArgument Categories_order_by
+    , category_id : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , comment : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , created_at : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , date : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , deleted : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , id : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , operation : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , payee : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , updated_at : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , user : OptionalArgument Users_order_by
+    , user_id : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    }
+
+
+{-| Type for the Transactions\_order\_by input object.
+-}
+type alias Transactions_order_by =
+    { account : OptionalArgument Accounts_order_by
+    , account_id : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , amount : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , category : OptionalArgument Categories_order_by
+    , category_id : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , comment : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , created_at : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , date : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , deleted : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , id : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , operation : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , payee : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , updated_at : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , user : OptionalArgument Users_order_by
+    , user_id : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    }
+
+
+{-| Encode a Transactions\_order\_by into a value that can be used as an argument.
+-}
+encodeTransactions_order_by : Transactions_order_by -> Value
+encodeTransactions_order_by input____ =
+    Encode.maybeObject
+        [ ( "account", encodeAccounts_order_by |> Encode.optional input____.account ), ( "account_id", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.account_id ), ( "amount", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.amount ), ( "category", encodeCategories_order_by |> Encode.optional input____.category ), ( "category_id", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.category_id ), ( "comment", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.comment ), ( "created_at", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.created_at ), ( "date", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.date ), ( "deleted", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.deleted ), ( "id", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.id ), ( "operation", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.operation ), ( "payee", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.payee ), ( "updated_at", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.updated_at ), ( "user", encodeUsers_order_by |> Encode.optional input____.user ), ( "user_id", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.user_id ) ]
+
+
+buildTransactions_pk_columns_input :
+    Transactions_pk_columns_inputRequiredFields
+    -> Transactions_pk_columns_input
+buildTransactions_pk_columns_input required____ =
+    { id = required____.id }
+
+
+type alias Transactions_pk_columns_inputRequiredFields =
+    { id : MonisApp.ScalarCodecs.Uuid }
+
+
+{-| Type for the Transactions\_pk\_columns\_input input object.
+-}
+type alias Transactions_pk_columns_input =
+    { id : MonisApp.ScalarCodecs.Uuid }
+
+
+{-| Encode a Transactions\_pk\_columns\_input into a value that can be used as an argument.
+-}
+encodeTransactions_pk_columns_input : Transactions_pk_columns_input -> Value
+encodeTransactions_pk_columns_input input____ =
+    Encode.maybeObject
+        [ ( "id", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) input____.id |> Just ) ]
+
+
+buildTransactions_set_input :
+    (Transactions_set_inputOptionalFields -> Transactions_set_inputOptionalFields)
+    -> Transactions_set_input
+buildTransactions_set_input fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { account_id = Absent, amount = Absent, category_id = Absent, comment = Absent, created_at = Absent, date = Absent, deleted = Absent, id = Absent, operation = Absent, payee = Absent, updated_at = Absent, user_id = Absent }
+    in
+    { account_id = optionals____.account_id, amount = optionals____.amount, category_id = optionals____.category_id, comment = optionals____.comment, created_at = optionals____.created_at, date = optionals____.date, deleted = optionals____.deleted, id = optionals____.id, operation = optionals____.operation, payee = optionals____.payee, updated_at = optionals____.updated_at, user_id = optionals____.user_id }
+
+
+type alias Transactions_set_inputOptionalFields =
+    { account_id : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , amount : OptionalArgument Int
+    , category_id : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , comment : OptionalArgument String
+    , created_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , date : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , deleted : OptionalArgument Bool
+    , id : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , operation : OptionalArgument String
+    , payee : OptionalArgument String
+    , updated_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , user_id : OptionalArgument String
+    }
+
+
+{-| Type for the Transactions\_set\_input input object.
+-}
+type alias Transactions_set_input =
+    { account_id : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , amount : OptionalArgument Int
+    , category_id : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , comment : OptionalArgument String
+    , created_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , date : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , deleted : OptionalArgument Bool
+    , id : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , operation : OptionalArgument String
+    , payee : OptionalArgument String
+    , updated_at : OptionalArgument MonisApp.ScalarCodecs.Timestamptz
+    , user_id : OptionalArgument String
+    }
+
+
+{-| Encode a Transactions\_set\_input into a value that can be used as an argument.
+-}
+encodeTransactions_set_input : Transactions_set_input -> Value
+encodeTransactions_set_input input____ =
+    Encode.maybeObject
+        [ ( "account_id", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.account_id ), ( "amount", Encode.int |> Encode.optional input____.amount ), ( "category_id", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.category_id ), ( "comment", Encode.string |> Encode.optional input____.comment ), ( "created_at", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.created_at ), ( "date", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.date ), ( "deleted", Encode.bool |> Encode.optional input____.deleted ), ( "id", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.id ), ( "operation", Encode.string |> Encode.optional input____.operation ), ( "payee", Encode.string |> Encode.optional input____.payee ), ( "updated_at", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecTimestamptz) |> Encode.optional input____.updated_at ), ( "user_id", Encode.string |> Encode.optional input____.user_id ) ]
+
+
+buildUsers_bool_exp :
+    (Users_bool_expOptionalFields -> Users_bool_expOptionalFields)
+    -> Users_bool_exp
+buildUsers_bool_exp fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { and_ = Absent, not_ = Absent, or_ = Absent, active = Absent, email = Absent, id = Absent, name = Absent }
+    in
+    Users_bool_exp { and_ = optionals____.and_, not_ = optionals____.not_, or_ = optionals____.or_, active = optionals____.active, email = optionals____.email, id = optionals____.id, name = optionals____.name }
+
+
+type alias Users_bool_expOptionalFields =
+    { and_ : OptionalArgument (List Users_bool_exp)
+    , not_ : OptionalArgument Users_bool_exp
+    , or_ : OptionalArgument (List Users_bool_exp)
+    , active : OptionalArgument Boolean_comparison_exp
+    , email : OptionalArgument String_comparison_exp
+    , id : OptionalArgument String_comparison_exp
+    , name : OptionalArgument String_comparison_exp
+    }
+
+
+{-| Type alias for the `Users_bool_exp` attributes. Note that this type
+needs to use the `Users_bool_exp` type (not just a plain type alias) because it has
+references to itself either directly (recursive) or indirectly (circular). See
+<https://github.com/dillonkearns/elm-graphql/issues/33>.
+-}
+type alias Users_bool_expRaw =
+    { and_ : OptionalArgument (List Users_bool_exp)
+    , not_ : OptionalArgument Users_bool_exp
+    , or_ : OptionalArgument (List Users_bool_exp)
+    , active : OptionalArgument Boolean_comparison_exp
+    , email : OptionalArgument String_comparison_exp
+    , id : OptionalArgument String_comparison_exp
+    , name : OptionalArgument String_comparison_exp
+    }
+
+
+{-| Type for the Users\_bool\_exp input object.
+-}
+type Users_bool_exp
+    = Users_bool_exp Users_bool_expRaw
+
+
+{-| Encode a Users\_bool\_exp into a value that can be used as an argument.
+-}
+encodeUsers_bool_exp : Users_bool_exp -> Value
+encodeUsers_bool_exp (Users_bool_exp input____) =
+    Encode.maybeObject
+        [ ( "_and", (encodeUsers_bool_exp |> Encode.list) |> Encode.optional input____.and_ ), ( "_not", encodeUsers_bool_exp |> Encode.optional input____.not_ ), ( "_or", (encodeUsers_bool_exp |> Encode.list) |> Encode.optional input____.or_ ), ( "active", encodeBoolean_comparison_exp |> Encode.optional input____.active ), ( "email", encodeString_comparison_exp |> Encode.optional input____.email ), ( "id", encodeString_comparison_exp |> Encode.optional input____.id ), ( "name", encodeString_comparison_exp |> Encode.optional input____.name ) ]
+
+
+buildUsers_insert_input :
+    (Users_insert_inputOptionalFields -> Users_insert_inputOptionalFields)
+    -> Users_insert_input
+buildUsers_insert_input fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { active = Absent, email = Absent, id = Absent, name = Absent }
+    in
+    { active = optionals____.active, email = optionals____.email, id = optionals____.id, name = optionals____.name }
+
+
+type alias Users_insert_inputOptionalFields =
+    { active : OptionalArgument Bool
+    , email : OptionalArgument String
+    , id : OptionalArgument String
+    , name : OptionalArgument String
+    }
+
+
+{-| Type for the Users\_insert\_input input object.
+-}
+type alias Users_insert_input =
+    { active : OptionalArgument Bool
+    , email : OptionalArgument String
+    , id : OptionalArgument String
+    , name : OptionalArgument String
+    }
+
+
+{-| Encode a Users\_insert\_input into a value that can be used as an argument.
+-}
+encodeUsers_insert_input : Users_insert_input -> Value
+encodeUsers_insert_input input____ =
+    Encode.maybeObject
+        [ ( "active", Encode.bool |> Encode.optional input____.active ), ( "email", Encode.string |> Encode.optional input____.email ), ( "id", Encode.string |> Encode.optional input____.id ), ( "name", Encode.string |> Encode.optional input____.name ) ]
+
+
+buildUsers_obj_rel_insert_input :
+    Users_obj_rel_insert_inputRequiredFields
+    -> (Users_obj_rel_insert_inputOptionalFields -> Users_obj_rel_insert_inputOptionalFields)
+    -> Users_obj_rel_insert_input
+buildUsers_obj_rel_insert_input required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { on_conflict = Absent }
+    in
+    Users_obj_rel_insert_input { data = required____.data, on_conflict = optionals____.on_conflict }
+
+
+type alias Users_obj_rel_insert_inputRequiredFields =
+    { data : Users_insert_input }
+
+
+type alias Users_obj_rel_insert_inputOptionalFields =
+    { on_conflict : OptionalArgument Users_on_conflict }
+
+
+{-| Type alias for the `Users_obj_rel_insert_input` attributes. Note that this type
+needs to use the `Users_obj_rel_insert_input` type (not just a plain type alias) because it has
+references to itself either directly (recursive) or indirectly (circular). See
+<https://github.com/dillonkearns/elm-graphql/issues/33>.
+-}
+type alias Users_obj_rel_insert_inputRaw =
+    { data : Users_insert_input
+    , on_conflict : OptionalArgument Users_on_conflict
+    }
+
+
+{-| Type for the Users\_obj\_rel\_insert\_input input object.
+-}
+type Users_obj_rel_insert_input
+    = Users_obj_rel_insert_input Users_obj_rel_insert_inputRaw
+
+
+{-| Encode a Users\_obj\_rel\_insert\_input into a value that can be used as an argument.
+-}
+encodeUsers_obj_rel_insert_input : Users_obj_rel_insert_input -> Value
+encodeUsers_obj_rel_insert_input (Users_obj_rel_insert_input input____) =
+    Encode.maybeObject
+        [ ( "data", encodeUsers_insert_input input____.data |> Just ), ( "on_conflict", encodeUsers_on_conflict |> Encode.optional input____.on_conflict ) ]
+
+
+buildUsers_on_conflict :
+    Users_on_conflictRequiredFields
+    -> (Users_on_conflictOptionalFields -> Users_on_conflictOptionalFields)
+    -> Users_on_conflict
+buildUsers_on_conflict required____ fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { where_ = Absent }
+    in
+    Users_on_conflict { constraint = required____.constraint, update_columns = required____.update_columns, where_ = optionals____.where_ }
+
+
+type alias Users_on_conflictRequiredFields =
+    { constraint : MonisApp.Enum.Users_constraint.Users_constraint
+    , update_columns : List MonisApp.Enum.Users_update_column.Users_update_column
+    }
+
+
+type alias Users_on_conflictOptionalFields =
+    { where_ : OptionalArgument Users_bool_exp }
+
+
+{-| Type alias for the `Users_on_conflict` attributes. Note that this type
+needs to use the `Users_on_conflict` type (not just a plain type alias) because it has
+references to itself either directly (recursive) or indirectly (circular). See
+<https://github.com/dillonkearns/elm-graphql/issues/33>.
+-}
+type alias Users_on_conflictRaw =
+    { constraint : MonisApp.Enum.Users_constraint.Users_constraint
+    , update_columns : List MonisApp.Enum.Users_update_column.Users_update_column
+    , where_ : OptionalArgument Users_bool_exp
+    }
+
+
+{-| Type for the Users\_on\_conflict input object.
+-}
+type Users_on_conflict
+    = Users_on_conflict Users_on_conflictRaw
+
+
+{-| Encode a Users\_on\_conflict into a value that can be used as an argument.
+-}
+encodeUsers_on_conflict : Users_on_conflict -> Value
+encodeUsers_on_conflict (Users_on_conflict input____) =
+    Encode.maybeObject
+        [ ( "constraint", Encode.enum MonisApp.Enum.Users_constraint.toString input____.constraint |> Just ), ( "update_columns", (Encode.enum MonisApp.Enum.Users_update_column.toString |> Encode.list) input____.update_columns |> Just ), ( "where", encodeUsers_bool_exp |> Encode.optional input____.where_ ) ]
+
+
+buildUsers_order_by :
+    (Users_order_byOptionalFields -> Users_order_byOptionalFields)
+    -> Users_order_by
+buildUsers_order_by fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { active = Absent, email = Absent, id = Absent, name = Absent }
+    in
+    { active = optionals____.active, email = optionals____.email, id = optionals____.id, name = optionals____.name }
+
+
+type alias Users_order_byOptionalFields =
+    { active : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , email : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , id : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , name : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    }
+
+
+{-| Type for the Users\_order\_by input object.
+-}
+type alias Users_order_by =
+    { active : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , email : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , id : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    , name : OptionalArgument MonisApp.Enum.Order_by.Order_by
+    }
+
+
+{-| Encode a Users\_order\_by into a value that can be used as an argument.
+-}
+encodeUsers_order_by : Users_order_by -> Value
+encodeUsers_order_by input____ =
+    Encode.maybeObject
+        [ ( "active", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.active ), ( "email", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.email ), ( "id", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.id ), ( "name", Encode.enum MonisApp.Enum.Order_by.toString |> Encode.optional input____.name ) ]
+
+
+buildUsers_pk_columns_input :
+    Users_pk_columns_inputRequiredFields
+    -> Users_pk_columns_input
+buildUsers_pk_columns_input required____ =
+    { id = required____.id }
+
+
+type alias Users_pk_columns_inputRequiredFields =
     { id : String }
 
 
-{-| Type for the DeleteAccountInput input object.
+{-| Type for the Users\_pk\_columns\_input input object.
 -}
-type alias DeleteAccountInput =
+type alias Users_pk_columns_input =
     { id : String }
 
 
-{-| Encode a DeleteAccountInput into a value that can be used as an argument.
+{-| Encode a Users\_pk\_columns\_input into a value that can be used as an argument.
 -}
-encodeDeleteAccountInput : DeleteAccountInput -> Value
-encodeDeleteAccountInput input =
+encodeUsers_pk_columns_input : Users_pk_columns_input -> Value
+encodeUsers_pk_columns_input input____ =
     Encode.maybeObject
-        [ ( "id", Encode.string input.id |> Just ) ]
+        [ ( "id", Encode.string input____.id |> Just ) ]
 
 
-buildRegisterInput :
-    RegisterInputRequiredFields
-    -> RegisterInput
-buildRegisterInput required =
-    { email = required.email, name = required.name, password = required.password, passwordConfirm = required.passwordConfirm }
+buildUsers_set_input :
+    (Users_set_inputOptionalFields -> Users_set_inputOptionalFields)
+    -> Users_set_input
+buildUsers_set_input fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { active = Absent, email = Absent, id = Absent, name = Absent }
+    in
+    { active = optionals____.active, email = optionals____.email, id = optionals____.id, name = optionals____.name }
 
 
-type alias RegisterInputRequiredFields =
-    { email : String
-    , name : String
-    , password : String
-    , passwordConfirm : String
+type alias Users_set_inputOptionalFields =
+    { active : OptionalArgument Bool
+    , email : OptionalArgument String
+    , id : OptionalArgument String
+    , name : OptionalArgument String
     }
 
 
-{-| Type for the RegisterInput input object.
+{-| Type for the Users\_set\_input input object.
 -}
-type alias RegisterInput =
-    { email : String
-    , name : String
-    , password : String
-    , passwordConfirm : String
+type alias Users_set_input =
+    { active : OptionalArgument Bool
+    , email : OptionalArgument String
+    , id : OptionalArgument String
+    , name : OptionalArgument String
     }
 
 
-{-| Encode a RegisterInput into a value that can be used as an argument.
+{-| Encode a Users\_set\_input into a value that can be used as an argument.
 -}
-encodeRegisterInput : RegisterInput -> Value
-encodeRegisterInput input =
+encodeUsers_set_input : Users_set_input -> Value
+encodeUsers_set_input input____ =
     Encode.maybeObject
-        [ ( "email", Encode.string input.email |> Just ), ( "name", Encode.string input.name |> Just ), ( "password", Encode.string input.password |> Just ), ( "passwordConfirm", Encode.string input.passwordConfirm |> Just ) ]
+        [ ( "active", Encode.bool |> Encode.optional input____.active ), ( "email", Encode.string |> Encode.optional input____.email ), ( "id", Encode.string |> Encode.optional input____.id ), ( "name", Encode.string |> Encode.optional input____.name ) ]
+
+
+buildUuid_cast_exp :
+    (Uuid_cast_expOptionalFields -> Uuid_cast_expOptionalFields)
+    -> Uuid_cast_exp
+buildUuid_cast_exp fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { string = Absent }
+    in
+    { string = optionals____.string }
+
+
+type alias Uuid_cast_expOptionalFields =
+    { string : OptionalArgument String_comparison_exp }
+
+
+{-| Type for the Uuid\_cast\_exp input object.
+-}
+type alias Uuid_cast_exp =
+    { string : OptionalArgument String_comparison_exp }
+
+
+{-| Encode a Uuid\_cast\_exp into a value that can be used as an argument.
+-}
+encodeUuid_cast_exp : Uuid_cast_exp -> Value
+encodeUuid_cast_exp input____ =
+    Encode.maybeObject
+        [ ( "String", encodeString_comparison_exp |> Encode.optional input____.string ) ]
+
+
+buildUuid_comparison_exp :
+    (Uuid_comparison_expOptionalFields -> Uuid_comparison_expOptionalFields)
+    -> Uuid_comparison_exp
+buildUuid_comparison_exp fillOptionals____ =
+    let
+        optionals____ =
+            fillOptionals____
+                { cast_ = Absent, eq_ = Absent, gt_ = Absent, gte_ = Absent, in_ = Absent, is_null_ = Absent, lt_ = Absent, lte_ = Absent, neq_ = Absent, nin_ = Absent }
+    in
+    { cast_ = optionals____.cast_, eq_ = optionals____.eq_, gt_ = optionals____.gt_, gte_ = optionals____.gte_, in_ = optionals____.in_, is_null_ = optionals____.is_null_, lt_ = optionals____.lt_, lte_ = optionals____.lte_, neq_ = optionals____.neq_, nin_ = optionals____.nin_ }
+
+
+type alias Uuid_comparison_expOptionalFields =
+    { cast_ : OptionalArgument Uuid_cast_exp
+    , eq_ : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , gt_ : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , gte_ : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , in_ : OptionalArgument (List MonisApp.ScalarCodecs.Uuid)
+    , is_null_ : OptionalArgument Bool
+    , lt_ : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , lte_ : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , neq_ : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , nin_ : OptionalArgument (List MonisApp.ScalarCodecs.Uuid)
+    }
+
+
+{-| Type for the Uuid\_comparison\_exp input object.
+-}
+type alias Uuid_comparison_exp =
+    { cast_ : OptionalArgument Uuid_cast_exp
+    , eq_ : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , gt_ : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , gte_ : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , in_ : OptionalArgument (List MonisApp.ScalarCodecs.Uuid)
+    , is_null_ : OptionalArgument Bool
+    , lt_ : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , lte_ : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , neq_ : OptionalArgument MonisApp.ScalarCodecs.Uuid
+    , nin_ : OptionalArgument (List MonisApp.ScalarCodecs.Uuid)
+    }
+
+
+{-| Encode a Uuid\_comparison\_exp into a value that can be used as an argument.
+-}
+encodeUuid_comparison_exp : Uuid_comparison_exp -> Value
+encodeUuid_comparison_exp input____ =
+    Encode.maybeObject
+        [ ( "_cast", encodeUuid_cast_exp |> Encode.optional input____.cast_ ), ( "_eq", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.eq_ ), ( "_gt", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.gt_ ), ( "_gte", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.gte_ ), ( "_in", ((MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.list) |> Encode.optional input____.in_ ), ( "_is_null", Encode.bool |> Encode.optional input____.is_null_ ), ( "_lt", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.lt_ ), ( "_lte", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.lte_ ), ( "_neq", (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.optional input____.neq_ ), ( "_nin", ((MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) |> Encode.list) |> Encode.optional input____.nin_ ) ]

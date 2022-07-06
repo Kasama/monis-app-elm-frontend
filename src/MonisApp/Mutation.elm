@@ -19,63 +19,623 @@ import MonisApp.ScalarCodecs
 import MonisApp.Union
 
 
-type alias CreateAccountRequiredArguments =
-    { input : MonisApp.InputObject.CreateAccountInput }
+type alias DeleteAccountsRequiredArguments =
+    { where_ : MonisApp.InputObject.Accounts_bool_exp }
 
 
-createAccount :
-    CreateAccountRequiredArguments
-    -> SelectionSet decodesTo MonisApp.Object.CreateAccountPayload
+{-| delete data from the table: "accounts"
+
+  - where\_ - filter the rows which have to be deleted
+
+-}
+delete_accounts :
+    DeleteAccountsRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Accounts_mutation_response
     -> SelectionSet (Maybe decodesTo) RootMutation
-createAccount requiredArgs object_ =
-    Object.selectionForCompositeField "createAccount" [ Argument.required "input" requiredArgs.input MonisApp.InputObject.encodeCreateAccountInput ] object_ (identity >> Decode.nullable)
+delete_accounts requiredArgs____ object____ =
+    Object.selectionForCompositeField "delete_accounts" [ Argument.required "where" requiredArgs____.where_ MonisApp.InputObject.encodeAccounts_bool_exp ] object____ (Basics.identity >> Decode.nullable)
 
 
-type alias CreateTransactionRequiredArguments =
-    { input : MonisApp.InputObject.CreateTransactionInput }
+type alias DeleteAccountsByPkRequiredArguments =
+    { id : MonisApp.ScalarCodecs.Uuid }
 
 
-createTransaction :
-    CreateTransactionRequiredArguments
-    -> SelectionSet decodesTo MonisApp.Object.CreateTransactionPayload
+{-| delete single row from the table: "accounts"
+-}
+delete_accounts_by_pk :
+    DeleteAccountsByPkRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Accounts
     -> SelectionSet (Maybe decodesTo) RootMutation
-createTransaction requiredArgs object_ =
-    Object.selectionForCompositeField "createTransaction" [ Argument.required "input" requiredArgs.input MonisApp.InputObject.encodeCreateTransactionInput ] object_ (identity >> Decode.nullable)
+delete_accounts_by_pk requiredArgs____ object____ =
+    Object.selectionForCompositeField "delete_accounts_by_pk" [ Argument.required "id" requiredArgs____.id (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.nullable)
 
 
-type alias DeleteAccountRequiredArguments =
-    { input : MonisApp.InputObject.DeleteAccountInput }
+type alias DeleteCategoriesRequiredArguments =
+    { where_ : MonisApp.InputObject.Categories_bool_exp }
 
 
-deleteAccount :
-    DeleteAccountRequiredArguments
-    -> SelectionSet decodesTo MonisApp.Object.DeleteAccountPayload
+{-| delete data from the table: "categories"
+
+  - where\_ - filter the rows which have to be deleted
+
+-}
+delete_categories :
+    DeleteCategoriesRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Categories_mutation_response
     -> SelectionSet (Maybe decodesTo) RootMutation
-deleteAccount requiredArgs object_ =
-    Object.selectionForCompositeField "deleteAccount" [ Argument.required "input" requiredArgs.input MonisApp.InputObject.encodeDeleteAccountInput ] object_ (identity >> Decode.nullable)
+delete_categories requiredArgs____ object____ =
+    Object.selectionForCompositeField "delete_categories" [ Argument.required "where" requiredArgs____.where_ MonisApp.InputObject.encodeCategories_bool_exp ] object____ (Basics.identity >> Decode.nullable)
 
 
-type alias LoginRequiredArguments =
-    { email : String
-    , password : String
+type alias DeleteCategoriesByPkRequiredArguments =
+    { id : MonisApp.ScalarCodecs.Uuid }
+
+
+{-| delete single row from the table: "categories"
+-}
+delete_categories_by_pk :
+    DeleteCategoriesByPkRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Categories
+    -> SelectionSet (Maybe decodesTo) RootMutation
+delete_categories_by_pk requiredArgs____ object____ =
+    Object.selectionForCompositeField "delete_categories_by_pk" [ Argument.required "id" requiredArgs____.id (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.nullable)
+
+
+type alias DeleteTransactionsRequiredArguments =
+    { where_ : MonisApp.InputObject.Transactions_bool_exp }
+
+
+{-| delete data from the table: "transactions"
+
+  - where\_ - filter the rows which have to be deleted
+
+-}
+delete_transactions :
+    DeleteTransactionsRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Transactions_mutation_response
+    -> SelectionSet (Maybe decodesTo) RootMutation
+delete_transactions requiredArgs____ object____ =
+    Object.selectionForCompositeField "delete_transactions" [ Argument.required "where" requiredArgs____.where_ MonisApp.InputObject.encodeTransactions_bool_exp ] object____ (Basics.identity >> Decode.nullable)
+
+
+type alias DeleteTransactionsByPkRequiredArguments =
+    { id : MonisApp.ScalarCodecs.Uuid }
+
+
+{-| delete single row from the table: "transactions"
+-}
+delete_transactions_by_pk :
+    DeleteTransactionsByPkRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Transactions
+    -> SelectionSet (Maybe decodesTo) RootMutation
+delete_transactions_by_pk requiredArgs____ object____ =
+    Object.selectionForCompositeField "delete_transactions_by_pk" [ Argument.required "id" requiredArgs____.id (MonisApp.ScalarCodecs.codecs |> MonisApp.Scalar.unwrapEncoder .codecUuid) ] object____ (Basics.identity >> Decode.nullable)
+
+
+type alias DeleteUsersRequiredArguments =
+    { where_ : MonisApp.InputObject.Users_bool_exp }
+
+
+{-| delete data from the table: "users"
+
+  - where\_ - filter the rows which have to be deleted
+
+-}
+delete_users :
+    DeleteUsersRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Users_mutation_response
+    -> SelectionSet (Maybe decodesTo) RootMutation
+delete_users requiredArgs____ object____ =
+    Object.selectionForCompositeField "delete_users" [ Argument.required "where" requiredArgs____.where_ MonisApp.InputObject.encodeUsers_bool_exp ] object____ (Basics.identity >> Decode.nullable)
+
+
+type alias DeleteUsersByPkRequiredArguments =
+    { id : String }
+
+
+{-| delete single row from the table: "users"
+-}
+delete_users_by_pk :
+    DeleteUsersByPkRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Users
+    -> SelectionSet (Maybe decodesTo) RootMutation
+delete_users_by_pk requiredArgs____ object____ =
+    Object.selectionForCompositeField "delete_users_by_pk" [ Argument.required "id" requiredArgs____.id Encode.string ] object____ (Basics.identity >> Decode.nullable)
+
+
+type alias InsertAccountsOptionalArguments =
+    { on_conflict : OptionalArgument MonisApp.InputObject.Accounts_on_conflict }
+
+
+type alias InsertAccountsRequiredArguments =
+    { objects : List MonisApp.InputObject.Accounts_insert_input }
+
+
+{-| insert data into the table: "accounts"
+
+  - objects - the rows to be inserted
+  - on\_conflict - upsert condition
+
+-}
+insert_accounts :
+    (InsertAccountsOptionalArguments -> InsertAccountsOptionalArguments)
+    -> InsertAccountsRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Accounts_mutation_response
+    -> SelectionSet (Maybe decodesTo) RootMutation
+insert_accounts fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { on_conflict = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "on_conflict" filledInOptionals____.on_conflict MonisApp.InputObject.encodeAccounts_on_conflict ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "insert_accounts" (optionalArgs____ ++ [ Argument.required "objects" requiredArgs____.objects (MonisApp.InputObject.encodeAccounts_insert_input |> Encode.list) ]) object____ (Basics.identity >> Decode.nullable)
+
+
+type alias InsertAccountsOneOptionalArguments =
+    { on_conflict : OptionalArgument MonisApp.InputObject.Accounts_on_conflict }
+
+
+type alias InsertAccountsOneRequiredArguments =
+    { object : MonisApp.InputObject.Accounts_insert_input }
+
+
+{-| insert a single row into the table: "accounts"
+
+  - object - the row to be inserted
+  - on\_conflict - upsert condition
+
+-}
+insert_accounts_one :
+    (InsertAccountsOneOptionalArguments -> InsertAccountsOneOptionalArguments)
+    -> InsertAccountsOneRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Accounts
+    -> SelectionSet (Maybe decodesTo) RootMutation
+insert_accounts_one fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { on_conflict = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "on_conflict" filledInOptionals____.on_conflict MonisApp.InputObject.encodeAccounts_on_conflict ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "insert_accounts_one" (optionalArgs____ ++ [ Argument.required "object" requiredArgs____.object MonisApp.InputObject.encodeAccounts_insert_input ]) object____ (Basics.identity >> Decode.nullable)
+
+
+type alias InsertCategoriesOptionalArguments =
+    { on_conflict : OptionalArgument MonisApp.InputObject.Categories_on_conflict }
+
+
+type alias InsertCategoriesRequiredArguments =
+    { objects : List MonisApp.InputObject.Categories_insert_input }
+
+
+{-| insert data into the table: "categories"
+
+  - objects - the rows to be inserted
+  - on\_conflict - upsert condition
+
+-}
+insert_categories :
+    (InsertCategoriesOptionalArguments -> InsertCategoriesOptionalArguments)
+    -> InsertCategoriesRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Categories_mutation_response
+    -> SelectionSet (Maybe decodesTo) RootMutation
+insert_categories fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { on_conflict = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "on_conflict" filledInOptionals____.on_conflict MonisApp.InputObject.encodeCategories_on_conflict ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "insert_categories" (optionalArgs____ ++ [ Argument.required "objects" requiredArgs____.objects (MonisApp.InputObject.encodeCategories_insert_input |> Encode.list) ]) object____ (Basics.identity >> Decode.nullable)
+
+
+type alias InsertCategoriesOneOptionalArguments =
+    { on_conflict : OptionalArgument MonisApp.InputObject.Categories_on_conflict }
+
+
+type alias InsertCategoriesOneRequiredArguments =
+    { object : MonisApp.InputObject.Categories_insert_input }
+
+
+{-| insert a single row into the table: "categories"
+
+  - object - the row to be inserted
+  - on\_conflict - upsert condition
+
+-}
+insert_categories_one :
+    (InsertCategoriesOneOptionalArguments -> InsertCategoriesOneOptionalArguments)
+    -> InsertCategoriesOneRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Categories
+    -> SelectionSet (Maybe decodesTo) RootMutation
+insert_categories_one fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { on_conflict = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "on_conflict" filledInOptionals____.on_conflict MonisApp.InputObject.encodeCategories_on_conflict ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "insert_categories_one" (optionalArgs____ ++ [ Argument.required "object" requiredArgs____.object MonisApp.InputObject.encodeCategories_insert_input ]) object____ (Basics.identity >> Decode.nullable)
+
+
+type alias InsertTransactionsOptionalArguments =
+    { on_conflict : OptionalArgument MonisApp.InputObject.Transactions_on_conflict }
+
+
+type alias InsertTransactionsRequiredArguments =
+    { objects : List MonisApp.InputObject.Transactions_insert_input }
+
+
+{-| insert data into the table: "transactions"
+
+  - objects - the rows to be inserted
+  - on\_conflict - upsert condition
+
+-}
+insert_transactions :
+    (InsertTransactionsOptionalArguments -> InsertTransactionsOptionalArguments)
+    -> InsertTransactionsRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Transactions_mutation_response
+    -> SelectionSet (Maybe decodesTo) RootMutation
+insert_transactions fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { on_conflict = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "on_conflict" filledInOptionals____.on_conflict MonisApp.InputObject.encodeTransactions_on_conflict ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "insert_transactions" (optionalArgs____ ++ [ Argument.required "objects" requiredArgs____.objects (MonisApp.InputObject.encodeTransactions_insert_input |> Encode.list) ]) object____ (Basics.identity >> Decode.nullable)
+
+
+type alias InsertTransactionsOneOptionalArguments =
+    { on_conflict : OptionalArgument MonisApp.InputObject.Transactions_on_conflict }
+
+
+type alias InsertTransactionsOneRequiredArguments =
+    { object : MonisApp.InputObject.Transactions_insert_input }
+
+
+{-| insert a single row into the table: "transactions"
+
+  - object - the row to be inserted
+  - on\_conflict - upsert condition
+
+-}
+insert_transactions_one :
+    (InsertTransactionsOneOptionalArguments -> InsertTransactionsOneOptionalArguments)
+    -> InsertTransactionsOneRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Transactions
+    -> SelectionSet (Maybe decodesTo) RootMutation
+insert_transactions_one fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { on_conflict = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "on_conflict" filledInOptionals____.on_conflict MonisApp.InputObject.encodeTransactions_on_conflict ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "insert_transactions_one" (optionalArgs____ ++ [ Argument.required "object" requiredArgs____.object MonisApp.InputObject.encodeTransactions_insert_input ]) object____ (Basics.identity >> Decode.nullable)
+
+
+type alias InsertUsersOptionalArguments =
+    { on_conflict : OptionalArgument MonisApp.InputObject.Users_on_conflict }
+
+
+type alias InsertUsersRequiredArguments =
+    { objects : List MonisApp.InputObject.Users_insert_input }
+
+
+{-| insert data into the table: "users"
+
+  - objects - the rows to be inserted
+  - on\_conflict - upsert condition
+
+-}
+insert_users :
+    (InsertUsersOptionalArguments -> InsertUsersOptionalArguments)
+    -> InsertUsersRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Users_mutation_response
+    -> SelectionSet (Maybe decodesTo) RootMutation
+insert_users fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { on_conflict = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "on_conflict" filledInOptionals____.on_conflict MonisApp.InputObject.encodeUsers_on_conflict ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "insert_users" (optionalArgs____ ++ [ Argument.required "objects" requiredArgs____.objects (MonisApp.InputObject.encodeUsers_insert_input |> Encode.list) ]) object____ (Basics.identity >> Decode.nullable)
+
+
+type alias InsertUsersOneOptionalArguments =
+    { on_conflict : OptionalArgument MonisApp.InputObject.Users_on_conflict }
+
+
+type alias InsertUsersOneRequiredArguments =
+    { object : MonisApp.InputObject.Users_insert_input }
+
+
+{-| insert a single row into the table: "users"
+
+  - object - the row to be inserted
+  - on\_conflict - upsert condition
+
+-}
+insert_users_one :
+    (InsertUsersOneOptionalArguments -> InsertUsersOneOptionalArguments)
+    -> InsertUsersOneRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Users
+    -> SelectionSet (Maybe decodesTo) RootMutation
+insert_users_one fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { on_conflict = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "on_conflict" filledInOptionals____.on_conflict MonisApp.InputObject.encodeUsers_on_conflict ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "insert_users_one" (optionalArgs____ ++ [ Argument.required "object" requiredArgs____.object MonisApp.InputObject.encodeUsers_insert_input ]) object____ (Basics.identity >> Decode.nullable)
+
+
+type alias UpdateAccountsOptionalArguments =
+    { set_ : OptionalArgument MonisApp.InputObject.Accounts_set_input }
+
+
+type alias UpdateAccountsRequiredArguments =
+    { where_ : MonisApp.InputObject.Accounts_bool_exp }
+
+
+{-| update data of the table: "accounts"
+
+  - set\_ - sets the columns of the filtered rows to the given values
+  - where\_ - filter the rows which have to be updated
+
+-}
+update_accounts :
+    (UpdateAccountsOptionalArguments -> UpdateAccountsOptionalArguments)
+    -> UpdateAccountsRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Accounts_mutation_response
+    -> SelectionSet (Maybe decodesTo) RootMutation
+update_accounts fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { set_ = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "_set" filledInOptionals____.set_ MonisApp.InputObject.encodeAccounts_set_input ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "update_accounts" (optionalArgs____ ++ [ Argument.required "where" requiredArgs____.where_ MonisApp.InputObject.encodeAccounts_bool_exp ]) object____ (Basics.identity >> Decode.nullable)
+
+
+type alias UpdateAccountsByPkOptionalArguments =
+    { set_ : OptionalArgument MonisApp.InputObject.Accounts_set_input }
+
+
+type alias UpdateAccountsByPkRequiredArguments =
+    { pk_columns : MonisApp.InputObject.Accounts_pk_columns_input }
+
+
+{-| update single row of the table: "accounts"
+
+  - set\_ - sets the columns of the filtered rows to the given values
+
+-}
+update_accounts_by_pk :
+    (UpdateAccountsByPkOptionalArguments -> UpdateAccountsByPkOptionalArguments)
+    -> UpdateAccountsByPkRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Accounts
+    -> SelectionSet (Maybe decodesTo) RootMutation
+update_accounts_by_pk fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { set_ = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "_set" filledInOptionals____.set_ MonisApp.InputObject.encodeAccounts_set_input ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "update_accounts_by_pk" (optionalArgs____ ++ [ Argument.required "pk_columns" requiredArgs____.pk_columns MonisApp.InputObject.encodeAccounts_pk_columns_input ]) object____ (Basics.identity >> Decode.nullable)
+
+
+type alias UpdateCategoriesOptionalArguments =
+    { set_ : OptionalArgument MonisApp.InputObject.Categories_set_input }
+
+
+type alias UpdateCategoriesRequiredArguments =
+    { where_ : MonisApp.InputObject.Categories_bool_exp }
+
+
+{-| update data of the table: "categories"
+
+  - set\_ - sets the columns of the filtered rows to the given values
+  - where\_ - filter the rows which have to be updated
+
+-}
+update_categories :
+    (UpdateCategoriesOptionalArguments -> UpdateCategoriesOptionalArguments)
+    -> UpdateCategoriesRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Categories_mutation_response
+    -> SelectionSet (Maybe decodesTo) RootMutation
+update_categories fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { set_ = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "_set" filledInOptionals____.set_ MonisApp.InputObject.encodeCategories_set_input ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "update_categories" (optionalArgs____ ++ [ Argument.required "where" requiredArgs____.where_ MonisApp.InputObject.encodeCategories_bool_exp ]) object____ (Basics.identity >> Decode.nullable)
+
+
+type alias UpdateCategoriesByPkOptionalArguments =
+    { set_ : OptionalArgument MonisApp.InputObject.Categories_set_input }
+
+
+type alias UpdateCategoriesByPkRequiredArguments =
+    { pk_columns : MonisApp.InputObject.Categories_pk_columns_input }
+
+
+{-| update single row of the table: "categories"
+
+  - set\_ - sets the columns of the filtered rows to the given values
+
+-}
+update_categories_by_pk :
+    (UpdateCategoriesByPkOptionalArguments -> UpdateCategoriesByPkOptionalArguments)
+    -> UpdateCategoriesByPkRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Categories
+    -> SelectionSet (Maybe decodesTo) RootMutation
+update_categories_by_pk fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { set_ = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "_set" filledInOptionals____.set_ MonisApp.InputObject.encodeCategories_set_input ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "update_categories_by_pk" (optionalArgs____ ++ [ Argument.required "pk_columns" requiredArgs____.pk_columns MonisApp.InputObject.encodeCategories_pk_columns_input ]) object____ (Basics.identity >> Decode.nullable)
+
+
+type alias UpdateTransactionsOptionalArguments =
+    { inc_ : OptionalArgument MonisApp.InputObject.Transactions_inc_input
+    , set_ : OptionalArgument MonisApp.InputObject.Transactions_set_input
     }
 
 
-login :
-    LoginRequiredArguments
-    -> SelectionSet decodesTo MonisApp.Object.LoginResult
+type alias UpdateTransactionsRequiredArguments =
+    { where_ : MonisApp.InputObject.Transactions_bool_exp }
+
+
+{-| update data of the table: "transactions"
+
+  - inc\_ - increments the numeric columns with given value of the filtered values
+  - set\_ - sets the columns of the filtered rows to the given values
+  - where\_ - filter the rows which have to be updated
+
+-}
+update_transactions :
+    (UpdateTransactionsOptionalArguments -> UpdateTransactionsOptionalArguments)
+    -> UpdateTransactionsRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Transactions_mutation_response
     -> SelectionSet (Maybe decodesTo) RootMutation
-login requiredArgs object_ =
-    Object.selectionForCompositeField "login" [ Argument.required "email" requiredArgs.email Encode.string, Argument.required "password" requiredArgs.password Encode.string ] object_ (identity >> Decode.nullable)
+update_transactions fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { inc_ = Absent, set_ = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "_inc" filledInOptionals____.inc_ MonisApp.InputObject.encodeTransactions_inc_input, Argument.optional "_set" filledInOptionals____.set_ MonisApp.InputObject.encodeTransactions_set_input ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "update_transactions" (optionalArgs____ ++ [ Argument.required "where" requiredArgs____.where_ MonisApp.InputObject.encodeTransactions_bool_exp ]) object____ (Basics.identity >> Decode.nullable)
 
 
-type alias RegisterRequiredArguments =
-    { input : MonisApp.InputObject.RegisterInput }
+type alias UpdateTransactionsByPkOptionalArguments =
+    { inc_ : OptionalArgument MonisApp.InputObject.Transactions_inc_input
+    , set_ : OptionalArgument MonisApp.InputObject.Transactions_set_input
+    }
 
 
-register :
-    RegisterRequiredArguments
-    -> SelectionSet decodesTo MonisApp.Object.RegisterPayload
+type alias UpdateTransactionsByPkRequiredArguments =
+    { pk_columns : MonisApp.InputObject.Transactions_pk_columns_input }
+
+
+{-| update single row of the table: "transactions"
+
+  - inc\_ - increments the numeric columns with given value of the filtered values
+  - set\_ - sets the columns of the filtered rows to the given values
+
+-}
+update_transactions_by_pk :
+    (UpdateTransactionsByPkOptionalArguments -> UpdateTransactionsByPkOptionalArguments)
+    -> UpdateTransactionsByPkRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Transactions
     -> SelectionSet (Maybe decodesTo) RootMutation
-register requiredArgs object_ =
-    Object.selectionForCompositeField "register" [ Argument.required "input" requiredArgs.input MonisApp.InputObject.encodeRegisterInput ] object_ (identity >> Decode.nullable)
+update_transactions_by_pk fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { inc_ = Absent, set_ = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "_inc" filledInOptionals____.inc_ MonisApp.InputObject.encodeTransactions_inc_input, Argument.optional "_set" filledInOptionals____.set_ MonisApp.InputObject.encodeTransactions_set_input ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "update_transactions_by_pk" (optionalArgs____ ++ [ Argument.required "pk_columns" requiredArgs____.pk_columns MonisApp.InputObject.encodeTransactions_pk_columns_input ]) object____ (Basics.identity >> Decode.nullable)
+
+
+type alias UpdateUsersOptionalArguments =
+    { set_ : OptionalArgument MonisApp.InputObject.Users_set_input }
+
+
+type alias UpdateUsersRequiredArguments =
+    { where_ : MonisApp.InputObject.Users_bool_exp }
+
+
+{-| update data of the table: "users"
+
+  - set\_ - sets the columns of the filtered rows to the given values
+  - where\_ - filter the rows which have to be updated
+
+-}
+update_users :
+    (UpdateUsersOptionalArguments -> UpdateUsersOptionalArguments)
+    -> UpdateUsersRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Users_mutation_response
+    -> SelectionSet (Maybe decodesTo) RootMutation
+update_users fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { set_ = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "_set" filledInOptionals____.set_ MonisApp.InputObject.encodeUsers_set_input ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "update_users" (optionalArgs____ ++ [ Argument.required "where" requiredArgs____.where_ MonisApp.InputObject.encodeUsers_bool_exp ]) object____ (Basics.identity >> Decode.nullable)
+
+
+type alias UpdateUsersByPkOptionalArguments =
+    { set_ : OptionalArgument MonisApp.InputObject.Users_set_input }
+
+
+type alias UpdateUsersByPkRequiredArguments =
+    { pk_columns : MonisApp.InputObject.Users_pk_columns_input }
+
+
+{-| update single row of the table: "users"
+
+  - set\_ - sets the columns of the filtered rows to the given values
+
+-}
+update_users_by_pk :
+    (UpdateUsersByPkOptionalArguments -> UpdateUsersByPkOptionalArguments)
+    -> UpdateUsersByPkRequiredArguments
+    -> SelectionSet decodesTo MonisApp.Object.Users
+    -> SelectionSet (Maybe decodesTo) RootMutation
+update_users_by_pk fillInOptionals____ requiredArgs____ object____ =
+    let
+        filledInOptionals____ =
+            fillInOptionals____ { set_ = Absent }
+
+        optionalArgs____ =
+            [ Argument.optional "_set" filledInOptionals____.set_ MonisApp.InputObject.encodeUsers_set_input ]
+                |> List.filterMap Basics.identity
+    in
+    Object.selectionForCompositeField "update_users_by_pk" (optionalArgs____ ++ [ Argument.required "pk_columns" requiredArgs____.pk_columns MonisApp.InputObject.encodeUsers_pk_columns_input ]) object____ (Basics.identity >> Decode.nullable)

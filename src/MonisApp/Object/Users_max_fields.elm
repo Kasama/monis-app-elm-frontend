@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module MonisApp.Object.DeleteAccountPayload exposing (..)
+module MonisApp.Object.Users_max_fields exposing (..)
 
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
@@ -19,8 +19,16 @@ import MonisApp.ScalarCodecs
 import MonisApp.Union
 
 
-account :
-    SelectionSet decodesTo MonisApp.Object.Account
-    -> SelectionSet decodesTo MonisApp.Object.DeleteAccountPayload
-account object_ =
-    Object.selectionForCompositeField "account" [] object_ identity
+email : SelectionSet (Maybe String) MonisApp.Object.Users_max_fields
+email =
+    Object.selectionForField "(Maybe String)" "email" [] (Decode.string |> Decode.nullable)
+
+
+id : SelectionSet (Maybe String) MonisApp.Object.Users_max_fields
+id =
+    Object.selectionForField "(Maybe String)" "id" [] (Decode.string |> Decode.nullable)
+
+
+name : SelectionSet (Maybe String) MonisApp.Object.Users_max_fields
+name =
+    Object.selectionForField "(Maybe String)" "name" [] (Decode.string |> Decode.nullable)
